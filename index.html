@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DB64</title>
+</head>
+
+<body>
+    <h1>DB64</h1>
+
+    <button>Set data</button>
+    <button>get data</button>
+
+    <script type="module">
+        import db64 from './db64.js'
+
+        const [setButton, getButton] = Array.from(document.querySelectorAll('button'))
+
+        setButton.addEventListener('mousedown', () => {
+            db64.use('Fishing')
+            // db64.from('hello').set('zap', 'no')
+            db64.from('world').setEntries({
+                'apples': 50000,
+                'pears': 20000,
+                'bananas': 40000,
+            })
+        })
+        getButton.addEventListener('mousedown', () => {
+            db64.use('Fishing')
+                // db64.from('hello').get('pears')
+                //     .then(result => console.log('get result', result))
+                // db64.from('hello').getEntries([0,2])
+                // .then(result => console.log('get result', result))
+                // db64.from('hello').delete('where')
+                .clear('world')
+        })
+    </script>
+</body>
+
+</html>
