@@ -1,11 +1,13 @@
 {
   "name": "db64",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A Practical IndexedDB API",
   "main": "db64.js",
   "type": "module",
   "scripts": {
-    "test": "./node_modules/.bin/http-server -a 127.0.0.1 -p 2222 -o"
+    "test": "./node_modules/.bin/http-server -a 127.0.0.1 -p 2222 -o",
+    "lint": "./node_modules/.bin/eslint db64.js",
+    "lint:fix": "./node_modules/.bin/eslint --fix db64.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +25,11 @@
   },
   "homepage": "https://github.com/julienetie/db64#readme",
   "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-n": "^16.5.0",
+    "eslint-plugin-promise": "^6.1.1",
     "http-server": "^14.1.1"
   }
 }
