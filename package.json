@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "description": "A Practical IndexedDB API",
   "main": "db64.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/http-server -a 127.0.0.1 -p 2222 -o"
   },
   "repository": {
     "type": "git",
@@ -20,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/julienetie/db64/issues"
   },
-  "homepage": "https://github.com/julienetie/db64#readme"
+  "homepage": "https://github.com/julienetie/db64#readme",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
 }
