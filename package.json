@@ -1,0 +1,24 @@
+{
+  "name": "db64",
+  "version": "0.1.0",
+  "description": "A Practical IndexedDB API",
+  "main": "db64.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/julienetie/db64.git"
+  },
+  "keywords": [
+    "IndexeDB",
+    "localStorage",
+    "database"
+  ],
+  "author": "Julien Etienne",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/julienetie/db64/issues"
+  },
+  "homepage": "https://github.com/julienetie/db64#readme"
+}
