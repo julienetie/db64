@@ -17,17 +17,17 @@ A more practcal alternative to [localStorage](https://developer.mozilla.org/en-U
 import db64 from './db64.js'
 
 try {
-  // First create a database with stores.
+  // First create a database with stores
   await db64.create('Games', 'Super Nintendo', 'Gameboy')
 
-  // Assing a variable for modifying a store.
+  // Assing a variable for modifying a store
   const snes = db64.use('Games', 'Super Nintendo')
 
-  // Set multiple entries
+  // Set multiple entries into Super Nintendo
   await snes.setEntries({ adventure: 'Mario Wrold', rpg: 'Zelda', fighting: 'Street Fighter II' })
 
-  // Get multiple entries
-  await snes.getEntries(['adventure', 'fighting'])
+  // Get multiple entries from Super Nintendo
+  await snes.getEntries(['adventure', 'fighting']) // { adventure: 'Mario Wrold', fighting: 'Street Fighter II' }
 ...
 ```
 
