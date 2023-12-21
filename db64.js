@@ -16,7 +16,6 @@ const openDB = (storeName) => new Promise((resolve, reject) => {
   db.onupgradeneeded = e => (e.target.result).createObjectStore(storeName)
   db.onsuccess = e => resolve(e.target.result)
   db.onerror = e => reject(e.target.result)
-
   return db
 })
 
@@ -40,6 +39,7 @@ const setData = async (db, storeName, key, dataValue, entries) => {
 }
 
 const getData = async (db, storeName, key, entries) => {
+  console.log('getData')
   return new Promise((resolve) => {
     const transaction = db.transaction([storeName])
     const objectStore = transaction.objectStore(storeName)
@@ -68,31 +68,27 @@ const getData = async (db, storeName, key, entries) => {
 }
 
 const deleteData = async (db, storeName, key) => {
-  const keyArr = isArray(key) ? key : [key]
   try {
-    const transaction = db.transaction([storeName], 'readwrite')
-    const objectStore = transaction.objectStore(storeName)
+    const objectStore = (db.transaction([storeName], 'readwrite')).objectStore(storeName)
     const cursorRequest = objectStore.openCursor()
 
     cursorRequest.onsuccess = e => {
       const cursor = e.target.result
 
       if (cursor) {
-        if (keyArr.includes(cursor.key)) cursor.delete()
+        if ((isArray(key) ? key : [key]).includes(cursor.key)) cursor.delete()
         cursor.continue()
       }
     }
   } catch (e) {
     console.error(e)
   }
-
   return await db64
 }
 
 const clearStore = (db, storeName) => {
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction([storeName], 'readwrite')
-    const objectStore = transaction.objectStore(storeName)
+    const objectStore = (db.transaction([storeName], 'readwrite')).objectStore(storeName)
     const objectStoreRequest = objectStore.clear()
 
     objectStoreRequest.onsuccess = resolve
@@ -101,28 +97,23 @@ const clearStore = (db, storeName) => {
 }
 
 const db64 = {
-  from: storeName => {
+  store: storeName => {
     return {
-      set: async (key, value) => {
-        return openDB(storeName).then(db => setData(db, storeName, key, value))
-          .catch(setDataError)
-      },
-      setEntries: async (value) => {
-        return openDB(storeName).then(db => setData(db, storeName, null, value, 'entries'))
-          .catch(setDataError)
-      },
-      get: async key => {
-        return openDB(storeName).then(db => getData(db, storeName, key))
-          .catch(getDataError)
-      },
-      getEntries: async (keys) => {
-        return openDB(storeName).then(db => getData(db, storeName, keys, 'entries'))
-          .catch(getDataError)
-      },
-      delete: async (keys) => {
-        return openDB(storeName).then(db => deleteData(db, storeName, keys))
-          .catch(console.error)
-      }
+      set: async (key, value) => openDB(storeName)
+        .then(db => setData(db, storeName, key, value))
+        .catch(setDataError),
+      setEntries: async (value) => openDB(storeName)
+        .then(db => setData(db, storeName, null, value, 'entries'))
+        .catch(setDataError),
+      get: async key => openDB(storeName)
+        .then(db => getData(db, storeName, key))
+        .catch(getDataError),
+      getEntries: async (keys) => openDB(storeName)
+        .then(db => getData(db, storeName, keys, 'entries'))
+        .catch(getDataError),
+      delete: async (keys) => openDB(storeName)
+        .then(db => deleteData(db, storeName, keys))
+        .catch(console.error)
     }
   },
   clear: async storeName => {

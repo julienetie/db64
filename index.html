@@ -16,12 +16,12 @@
     <script type="module">
         import db64 from './db64.js'
 
-        // const [setButton, getButton] = Array.from(document.querySelectorAll('button'))
+        // const [setButton, getButton] = Array.store(document.querySelectorAll('button'))
 
         // setButton.addEventListener('mousedown', () => {
         //     // db64.use('Fishing')
-        //     // // db64.from('hello').set('zap', 'no')
-        //     // db64.from('world').setEntries({
+        //     // // db64.store('hello').set('zap', 'no')
+        //     // db64.store('world').setEntries({
         //     //     'apples': 50000,
         //     //     'pears': 20000,
         //     //     'bananas': 40000,
@@ -29,52 +29,52 @@
         // })
         // getButton.addEventListener('mousedown', () => {
         //     // db64.use('Fishing')
-        //         // db64.from('hello').get('pears')
+        //         // db64.store('hello').get('pears')
         //         //     .then(result => console.log('get result', result))
-        //         // db64.from('hello').getEntries([0,2])
+        //         // db64.store('hello').getEntries([0,2])
         //         // .then(result => console.log('get result', result))
-        //         // db64.from('hello').delete('where')
+        //         // db64.store('hello').delete('where')
         //         // .clear('world')
         // })
 
         try {
             // Set
             const setReturn = await db64.use('Games')
-                .from('Super Nintendo').set(6, 'Donkey Kong Country')
+                .store('Super Nintendo').set(6, 'Donkey Kong Country')
 
             // SetEntries
             const setEntriesReturn = await db64.use('Games')
-                .from('Super Nintendo').setEntries(['Mario Wrold', 'Zelda', 'Super Metroid', 'F-Zero', 'Street Fighter II'])
+                .store('Super Nintendo').setEntries(['Mario Wrold', 'Zelda', 'Super Metroid', 'F-Zero', 'Street Fighter II'])
 
             // Get
-            const entry4 = await db64.from('Super Nintendo').get(4)
-            const entry6 = await db64.from('Super Nintendo').get(6)
+            const entry4 = await db64.store('Super Nintendo').get(4)
+            const entry6 = await db64.store('Super Nintendo').get(6)
 
-            const entries = await db64.from('Super Nintendo').getEntries([2, 4, 5])
+            const entries = await db64.store('Super Nintendo').getEntries([2, 4, 5])
             console.log(setReturn, setEntriesReturn)
             console.log('Entry 4 and 6: ', entry4, entry6)
             console.log('entries', entries)
 
             const players = await (
                 await db64.use('Sports')
-                    .from('Basketball')
+                    .store('Basketball')
                     .setEntries({
                         lakers: 'Lebron',
                         bulls: 'Jordan',
                         phoenix: 'Durant'
                     })
             )
-                .from('Basketball').getEntries(['lakers', 'bulls'])
+                .store('Basketball').getEntries(['lakers', 'bulls'])
 
             console.log('Lakers and Bulls:', players)
 
 
             const deletedTeams = await db64.use('Sports')
-                    .from('Basketball')
+                    .store('Basketball')
                     .delete('lakers')
             
 
-            db64.use('Sports').from('Basketball').delete('bulls')
+            db64.use('Sports').store('Basketball').delete('bulls')
             console.log('deletedTeams', deletedTeams)
         } catch (e) {
             console.error(e)
