@@ -11,20 +11,24 @@ A more practcal alternative to [localStorage](https://developer.mozilla.org/en-U
 - Set and get single or multiple entries
 - Delete single, multiple or all entries
 - No versioning 
-- 2.1kB minified
+- Around 2kB minified
 
 ```javascript
 import db64 from './db64.js'
 
-db64.use('animals')                                           // - Create or use an existing database 
-  .store('birds')                                             // - create or use an existubg store
-    .setEntries({warbler: 4, cuckoo: 3, emu: 2})              // - Set multiple entries via an array or object
+try {
+  // First create a database with stores.
+  await db64.create('Games', 'Super Nintendo', 'Gameboy')
 
-db64.store('birds').getEntries(['emu', 'warbler'])             // Get multiple entries
+  // Assing a variable for modifying a store.
+  const snes = db64.use('Games', 'Super Nintendo')
 
-db64.store('birds').delete(['cuckoo', 'emu'])                  // Delete a single or array of entries
+  // Set multiple entries
+  await snes.setEntries({ adventure: 'Mario Wrold', rpg: 'Zelda', fighting: 'Street Fighter II' })
 
-db64.clear('birds')                                           // Delete all entries in birds
+  // Get multiple entries
+  await snes.getEntries(['adventure', 'fighting'])
+...
 ```
 
 
@@ -38,8 +42,8 @@ db64.clear('birds')                                           // Delete all entr
 ### Practical challenges when using IndexedDB
 - It's event driven, without promises
 - It was designed to encourage versioning, which is not necessary for the majority of projects
-- The API is considered as (low level) and is not a drop in replacement for localStorage
-- Removing databases and stores is not straight forward and usually requires versioning
+- The API is considered as (low level) and can be challenging as a replacement for localStorage
+- Removing databases and stores is not straight forward nor necessary, and usually requires versioning
 
 
 Install db64
@@ -47,47 +51,50 @@ Install db64
 npm i db64
 ```
 
-**Create or use an existing database**  _[string]_ (the default DB name is "default")
+**Create a database with stores**  _(string, array)_
 ```javascript 
-db64.use('localDB')  // Returns db64
+await db64.create('game-consoles', ['n64', 'ps5', 'dreamcast', 'xbox-360'])
 ```
 
-**Create a store** and **set data**. See [structured clone algorithm](https://developer.mozilla.org/en/US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm) for supported types. 
+**Use a store**  _(string, string)_
+```javascript 
+const n64 = db64.use('game-consoles', 'n64')
+```
+
+**Set an entry** _(IDB type, IDB type)_ _See [structured clone algorithm](https://developer.mozilla.org/en/US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm) for supported types_
 ```javascript
-db64.store('fruits').set('some-key', 'some-value') // [Promise]
+await n64.set(5, 'Super Mario 64')
 ```
-
-**Get data** _[string]_
+**Set multiple entries** _(object | array)_
 ```javascript
-const someKey = await db64.store('fruits').get('some-key')  // [Promise]
+await n64.setEntries({fps: 'GoldenEye 007', space: 'Star Fox 64', adventure: 'Banjo-Kazooie'})
+await n64.setEntries(['Wave Race 64', 'The Legend of Zelda'])
 ```
-**Set multiple entries** _[Object] | [Array]_
+
+**Get an entry** _(IDB type)_
 ```javascript
-db64.store('fruits').setEntries({ bananas: 5, pears: 4, mangoes: 7, apples: 2 })  // [Promise]
-
-// or 
-
-db64.store('fruits').setEntries([ 'bananas', 'pears', 'mangoes', 'apples' ]) // [Promise]
+const fps = await n64.get('fps') // GoldenEye 007
 ```
 
-**Get multiple entries** _[Array]_
+**Get multiple entries** _(object | array)_
 ```javascript
-const rosaceaeFruits = await db64.store('fruits').setEntries([ 'pears', 'apples' ])  // [Promise]
+const rareware = await n64.getEntries(['fps', 'adventure', 5]) // {fps: 'GoldenEye 007', adventure: 'Banjo-Kazooie', 0: 'Super Mario 64'}
 ```
-
-**Delete a single or multiple entries** _[String] | [Array]_
+**Delete an entry** _(IDB type | array)_
 ```javascript
-db64.store('fruits').delete('mangoes') // [Promise]
-
-// or
-
-db64.store('fruits').delete([ 'bananas', 'mangoes' ]) // [Promise]
+await n64.delete(1)  // Deletes 'The Legend of Zelda'
 ```
 
-**Empty an object store** _[String]_
+**Delete multiple entries**
 ```javascript
-db64.clear('fruits')  // [Promise]
+await n64.delete(['adventure', 0])  // Deletes 'Banjo-Kazooie' and 'Super Mario 64'
 ```
+
+**Clear a store** _(string, string)_
+```javascirpt
+await db64.clear('game-consoles', 'n64') // All data in n64 is deleted
+```
+
 
 ### Why bd64 opts out of deleting databases and object stores
 
