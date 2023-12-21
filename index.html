@@ -16,69 +16,100 @@
     <script type="module">
         import db64 from './db64.js'
 
-        // const [setButton, getButton] = Array.store(document.querySelectorAll('button'))
+        // To makesure we're getting back db64 for function chaining.
+        const shallowEqual = (a, b) => {
+            const keysA = Object.keys(a)
+            const keysB = Object.keys(b)
 
-        // setButton.addEventListener('mousedown', () => {
-        //     // db64.use('Fishing')
-        //     // // db64.store('hello').set('zap', 'no')
-        //     // db64.store('world').setEntries({
-        //     //     'apples': 50000,
-        //     //     'pears': 20000,
-        //     //     'bananas': 40000,
-        //     // })
-        // })
-        // getButton.addEventListener('mousedown', () => {
-        //     // db64.use('Fishing')
-        //         // db64.store('hello').get('pears')
-        //         //     .then(result => console.log('get result', result))
-        //         // db64.store('hello').getEntries([0,2])
-        //         // .then(result => console.log('get result', result))
-        //         // db64.store('hello').delete('where')
-        //         // .clear('world')
-        // })
+            if (keysA.length !== keysB.length) return false
+            return keysA.every(key => a[key] === b[key])
+        }
+
 
         try {
-            // Set
-            const setReturn = await db64.use('Games')
-                .store('Super Nintendo').set(6, 'Donkey Kong Country')
 
-            // SetEntries
-            const setEntriesReturn = await db64.use('Games')
-                .store('Super Nintendo').setEntries(['Mario Wrold', 'Zelda', 'Super Metroid', 'F-Zero', 'Street Fighter II'])
+            // Create the databases and stores before storing and retrieving data.
+            await db64.create('Games', ['Super Nintendo', 'Gameboy'])
+            const createReturn = await db64.create('Sports', ['Football', 'Tennis', 'Basketball']) // An example.
 
-            // Get
-            const entry4 = await db64.store('Super Nintendo').get(4)
-            const entry6 = await db64.store('Super Nintendo').get(6)
+            console.log('createReturn returns db64:', shallowEqual(createReturn, db64))
 
-            const entries = await db64.store('Super Nintendo').getEntries([2, 4, 5])
-            console.log(setReturn, setEntriesReturn)
-            console.log('Entry 4 and 6: ', entry4, entry6)
-            console.log('entries', entries)
-
-            const players = await (
-                await db64.use('Sports')
-                    .store('Basketball')
-                    .setEntries({
-                        lakers: 'Lebron',
-                        bulls: 'Jordan',
-                        phoenix: 'Durant'
-                    })
-            )
-                .store('Basketball').getEntries(['lakers', 'bulls'])
-
-            console.log('Lakers and Bulls:', players)
+            // Assign a variable with the selected database and store to modify 
+            const snes = db64.use('Games', 'Super Nintendo')
 
 
-            const deletedTeams = await db64.use('Sports')
-                    .store('Basketball')
-                    .delete('lakers')
-            
 
-            db64.use('Sports').store('Basketball').delete('bulls')
-            console.log('deletedTeams', deletedTeams)
+            // .set key 5
+            const setReturn = await snes.set(5, 'Donkey Kong Country')
+
+            console.info('.set returns db64:', shallowEqual(setReturn, db64))
+
+
+
+            // .setEntries via Array for keys 0,1,2,3,4 
+            const setEntriesArrayReturn = await snes.setEntries(['Mario Wrold', 'Zelda', 'Super Metroid', 'F-Zero', 'Street Fighter II'])
+
+            console.info('.setEntriesArrayReturn returns db64:', shallowEqual(setEntriesArrayReturn, db64))
+
+
+
+            // .setEntries via Object for keys racing, rpg, fighting, adventure
+            const setEntriesObjectReturn = await snes.setEntries({ adventure: 'Mario Wrold', rpg: 'Zelda', racing: 'F-Zero', fighting: 'Street Fighter II' })
+
+            console.info('.setEntriesObjectReturn returns db64:', shallowEqual(setEntriesObjectReturn, db64))
+
+
+
+            // .get key 4
+            const entry4 = await snes.get(4)
+
+            console.info('key 4:', entry4)
+
+
+
+            // .get key 5
+            const entry5 = await snes.get(5)
+
+            console.info('key 5:', entry5)
+
+
+
+            // .getEntries for keys 1,3,5
+            const entries = await snes.getEntries([1, 3, 5])
+
+            console.info('keys 1,3,5:', entries)
+
+
+
+            // .delete entry 0 */
+            const deleteEntry = await snes.delete(0)
+
+            console.info('.deleteEntry returns db64:', shallowEqual(deleteEntry, db64))
+
+
+
+            // .delete entries for keys 2,4,5, fighting
+            const deleteEntries = await snes.delete([2, 4, 5, 'fighting'])
+
+            console.info('.deleteEntries returns db64:', shallowEqual(deleteEntries, db64))
+
+
+
+            // Create variable to modify Gameboy store
+            const gb = db64.use('Games', 'Gameboy')
+
+
+
+            // .clear all entries for 'Gameboy'
+            await gb.setEntries({ strategy: 'Tetris', rpg: 'Zelda: Link\'s Awakening', adventure: 'Wario Land II' })
+            const clearStore = await db64.clear('Games', 'Gameboy')
+
+            console.info('.clearStore returns db64:', shallowEqual(clearStore, db64))
+
         } catch (e) {
             console.error(e)
         }
+
     </script>
 </body>
 
