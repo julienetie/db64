@@ -20,9 +20,9 @@ db64.use('animals')                                           // - Create or use
   .store('birds')                                             // - create or use an existubg store
     .setEntries({warbler: 4, cuckoo: 3, emu: 2})              // - Set multiple entries via an array or object
 
-db64.from('birds').getEntries(['emu', 'warbler'])             // Get multiple entries
+db64.store('birds').getEntries(['emu', 'warbler'])             // Get multiple entries
 
-db64.from('birds').delete(['cuckoo', 'emu'])                  // Delete a single or array of entries
+db64.store('birds').delete(['cuckoo', 'emu'])                  // Delete a single or array of entries
 
 db64.clear('birds')                                           // Delete all entries in birds
 ```
