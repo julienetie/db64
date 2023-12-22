@@ -91,7 +91,7 @@ await n64.delete(['adventure', 0])  // Deletes 'Banjo-Kazooie' and 'Super Mario 
 ```
 
 **Clear a store** _(string, string)_
-```javascirpt
+```javascript
 await db64.clear('game-consoles', 'n64') // All data in n64 is deleted
 ```
 
