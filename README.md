@@ -96,7 +96,7 @@ await db64.clear('game-consoles', 'n64') // All data in n64 is deleted
 ```
 
 
-### Why bd64 opts out of deleting databases and object stores
+### Why db64 opts out of deleting databases and object stores
 
 Deleting existing versions of databases or object stores in IndexedDB is not feasible due to the requirement to create a new version, and old versions remain accessible. While compaction may optimize, it doesn't ensure the removal of unwanted data. db64 provides an effective solution by allowing you to clear an object store, removing all its data. This feature proves beneficial for any application, even in cases where empty stores cannot be removed. If you do require versioning consider using [idb](https://github.com/jakearchibald/idb). **If you're not building a progressive web app (PWA) you probably don't need versioning**. 
 
