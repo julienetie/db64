@@ -1,6 +1,6 @@
 {
   "name": "db64",
-  "version": "0.5.3",
+  "version": "0.6.0",
   "description": "A Practical IndexedDB API",
   "main": "db64.js",
   "type": "module",
