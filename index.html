@@ -106,6 +106,10 @@
 
             console.info('.clearStore returns db64:', shallowEqual(clearStore, db64))
 
+            
+            // Delete db
+            const db64Obj = await db64.delete('Games')
+            console.log('db64Obj', db64Obj)
         } catch (e) {
             console.error(e)
         }

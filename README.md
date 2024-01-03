@@ -28,6 +28,9 @@ try {
 
   // Get multiple entries from Super Nintendo
   await snes.getEntries(['adventure', 'fighting']) // { adventure: 'Mario Wrold', fighting: 'Street Fighter II' }
+
+  // Delete an existing db 
+  await db64.delete('Games')
 ...
 ```
 
@@ -95,14 +98,39 @@ await n64.delete(['adventure', 0])  // Deletes 'Banjo-Kazooie' and 'Super Mario 
 await db64.clear('game-consoles', 'n64') // All data in n64 is deleted
 ```
 
+**Delete a DB** _(string)_
+```javascript
+await db64.delete('game-consoles') // game-consoles is deleted
+```
 
-### Why db64 opts out of deleting databases and object stores
+### Why db64 opts out of deleting object stores
+We are avoiding versioning to keep your life simple. Deleting an existing object stores in IndexedDB triggers a version change. _(Whilst compaction may optimise, it doesn't ensure the removal of unwanted data)_
 
-Deleting existing versions of databases or object stores in IndexedDB is not feasible due to the requirement to create a new version, and old versions remain accessible. While compaction may optimize, it doesn't ensure the removal of unwanted data. db64 provides an effective solution by allowing you to clear an object store, removing all its data. This feature proves beneficial for any application, even in cases where empty stores cannot be removed. If you do require versioning consider using [idb](https://github.com/jakearchibald/idb). **If you're not building a progressive web app (PWA) you probably don't need versioning**. 
+Here's the db64 workflow:
 
+1. Initialise by creating a DB with stores or multiple DBs with stores.
+    - _(You won't be able to add stores to a DB later unless you delete the DB in question. This is by design)_
+
+3. Use a DB.
+    - _(You can make multiple transactions concurrently for multiple DBs, or stores)_
+
+4. Set, get and clear data.
+
+5. **Handel the DB deletion and re-creation life-cycle**:
+    - _When data cannot be retrieved from the user's IndexedDB_
+    - _When there's an error_
+      - _Data corruption_
+      - _Quota exceeded_
+      - _General errors_
+    - _**When in the future you decide to add more stores at initialisation**_
+    - _When you want to remove stores, especially for data protection_
+
+You must consider step 4, if not you may leave users stuck because you think it works fine on your computer.
+
+If you do require versioning consider using [idb](https://github.com/jakearchibald/idb). **If you're not building a progressive web app (PWA) you probably don't need versioning**.
 
 ### Contributors
 Don't hesitate just contribute, it's a tiny library we will figure it out. 
 
 ---
-MIT (c) Julien Etienne 2023
+MIT © Julien Etienne 2023
