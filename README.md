@@ -111,12 +111,12 @@ Here's the db64 workflow:
 1. Initialise by creating a DB with stores or multiple DBs with stores.
     - _(You won't be able to add stores to an existing DB later, unless you delete the DB in question. This is by design)_
 
-3. Use a DB.
+2. Use a DB.
     - _(You can make multiple transactions concurrently for multiple DBs, or stores)_
 
-4. Set, get and clear data.
+3. Set, get and clear data.
 
-5. **Manage the lifecycle of DB deletion and re-creation**:
+4. **Manage the lifecycle of DB deletion and re-creation**:
     - _When data cannot be retrieved from the user's IndexedDB_
     - _When there's an error_
       - _Data corruption_
@@ -125,8 +125,8 @@ Here's the db64 workflow:
     - _**When in the future you decide to add more stores at initialisation**_
     - _When you want to remove stores, especially for data protection_
 
-It's important to consider step 5, if not you may leave users stuck because everything looks fine on your computer.
-Step 5 isn't specific to IndexedDB, it also applies to _localStorage_ but it's more prevalent with IndexedDB as there's 
+It's important to consider step 4, if not you may leave users stuck because everything looks fine on your computer.
+Step 4 isn't specific to IndexedDB, it also applies to _localStorage_ but it's more prevalent with IndexedDB as there's 
 a higher risk of the application breaking if you decide to make chages to the codebase in the future.
 
 If you do require versioning consider using [idb](https://github.com/jakearchibald/idb). **If you're not building a progressive web app (PWA) you probably don't need versioning**.
