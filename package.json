@@ -1,13 +1,18 @@
 {
   "name": "db64",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "A Practical IndexedDB API",
   "main": "db64.js",
   "type": "module",
+  "exports": {
+    "import": "./db64.js",
+    "require": "./db64.cjs.js"
+  },
   "scripts": {
     "test": "./node_modules/.bin/http-server -a 127.0.0.1 -p 2222 -o",
-    "lint": "./node_modules/.bin/eslint db64.js",
-    "lint:fix": "./node_modules/.bin/eslint --fix db64.js"
+    "lint": "./node_modules/.bin/eslint db64.js make-cjs.js",
+    "lint:fix": "./node_modules/.bin/eslint --fix db64.js make-cjs.js",
+    "prepublishOnly": "node make-cjs.js"
   },
   "repository": {
     "type": "git",
