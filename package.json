@@ -1,12 +1,12 @@
 {
   "name": "db64",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "A Practical IndexedDB API",
   "main": "db64.js",
   "type": "module",
   "exports": {
     "import": "./db64.js",
-    "require": "./db64.cjs.js"
+    "require": "./db64.cjs"
   },
   "scripts": {
     "test": "./node_modules/.bin/http-server -a 127.0.0.1 -p 2222 -o",

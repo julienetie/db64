@@ -4,7 +4,7 @@ import path, { dirname } from 'path'
 const currentFilePath = (new URL(import.meta.url)).pathname
 const __dirname = dirname(currentFilePath)
 const sourceUrl = path.join(__dirname, 'db64.js')
-const cjsTarget = path.join(__dirname, 'db64.cjs.js')
+const cjsTarget = path.join(__dirname, 'db64.cjs')
 
 const createCJS = async () => {
   try {
