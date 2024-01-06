@@ -13,6 +13,7 @@ A more practcal alternative to [localStorage](https://developer.mozilla.org/en-U
 - No versioning 
 - Around 2kB minified
 
+E.g.
 ```javascript
 import db64 from './db64.js'
 
@@ -34,7 +35,6 @@ try {
 ...
 ```
 
-
 ### Why IndexedDB, why not localStorage?
 - Better performance
 - Asynchronous (localStorage is blocking)
@@ -49,9 +49,17 @@ try {
 - Removing databases and stores is not straight forward nor necessary, and usually requires versioning
 
 
-Install db64
+Install:
 ```
 npm i db64
+```
+Usage:
+```javascript
+import db64 from 'db64.js'    // ES (native)
+// or
+import db64 from 'db64'       // ES
+// or
+const db64 = require('db64')  // CommonJS
 ```
 
 **Create a database with stores**  _(string, array)_
