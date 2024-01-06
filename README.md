@@ -49,11 +49,11 @@ try {
 - Removing databases and stores is not straight forward nor necessary, and usually requires versioning
 
 
-Install:
+**Install**
 ```
 npm i db64
 ```
-Usage:
+**Import**
 ```javascript
 import db64 from 'db64.js'    // ES (native)
 // or
