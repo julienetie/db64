@@ -8,5 +8,6 @@
         "ecmaVersion": "latest"
     },
     "rules": {
+        "no-multiple-empty-lines": "off"
     }
 }

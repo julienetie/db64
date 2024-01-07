@@ -1,6 +1,7 @@
 const { isArray } = Array
 const connections = []
 
+
 /*
 Creates a new database with given stores if the database and stores don't exist.
 - name            string      The databse name
@@ -15,6 +16,12 @@ const openDB = (name = 'default', storeNames) => new Promise((resolve, reject) =
     reject(e)
   }
 
+
+  /*
+  db64 does not revolve around versioning. Therefore, this function will only run once
+  for every new set of databases created. Each set of databases and stores can only be
+  created once and cannot be modified. Therefore, all databases have a version of 1.
+  */
   db.onupgradeneeded = e => {
     const { result } = e.target
     storeNames.forEach(storeName => {
@@ -25,6 +32,10 @@ const openDB = (name = 'default', storeNames) => new Promise((resolve, reject) =
     })
   }
 
+
+  /*
+  Connected databases are stored to be disconnected before deletion.
+  */
   db.onsuccess = e => {
     hasDBandStores = true
     connections.push(db)
@@ -34,6 +45,7 @@ const openDB = (name = 'default', storeNames) => new Promise((resolve, reject) =
   db.onerror = e => reject(e.target.result)
   return db
 })
+
 
 /*
 Sets an entry by a given key/value pair or a dataset of entries.
@@ -61,6 +73,7 @@ const setData = async (db, storeName, key, dataValue, entries) => {
   }
   return db64
 }
+
 
 /*
 Gets an entry by a given key/value pair or a dataset of entries.
@@ -95,6 +108,7 @@ const getData = async (db, storeName, key, entries) => {
   })
 }
 
+
 /*
 Deletes an entry for a given store by key.
 - db            object          Database object
@@ -121,6 +135,7 @@ const deleteData = async (db, storeName, key) => {
   return db64
 }
 
+
 /*
 Empties a store.
 - db              object              Database object
@@ -136,6 +151,7 @@ const clearStore = (db, storeName) => {
     objectStoreRequest.onerror = e => reject(e.target.error)
   })
 }
+
 
 /*
 Deletes a given databse.
@@ -161,7 +177,9 @@ const deleteDB = name => {
   })
 }
 
+
 let hasDBandStores = false
+
 
 /*
 The db64 object */
@@ -191,7 +209,6 @@ const db64 = {
       delete: async (keys) => openDB(name, storeName)
         .then(db => deleteData(db, storeName, keys))
         .catch(console.error)
-
     }
   },
   clear: async (name, storeName) => openDB(name, storeName)
