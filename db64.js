@@ -2,6 +2,7 @@ const { isArray } = Array
 const connections = []
 const databaseNames = new Set()
 
+
 /*
 Creates a new database with given stores if the database and stores don't exist.
 - name            string      The databse name
@@ -9,9 +10,9 @@ Creates a new database with given stores if the database and stores don't exist.
 - Return          object      The given database
 */
 const openDatabase = (name = 'default', storeNames) => new Promise((resolve, reject) => {
-  let db
+  let database
   try {
-    db = window.indexedDB.open(name, 1)
+    database = window.indexedDB.open(name, 1)
   } catch (e) {
     reject(e)
   }
@@ -22,12 +23,11 @@ const openDatabase = (name = 'default', storeNames) => new Promise((resolve, rej
   for every new set of databases created. Each set of databases and stores can only be
   created once and cannot be modified. Therefore, all databases have a version of 1.
   */
-  db.onupgradeneeded = e => {
-    const { result } = e.target
+  database.onupgradeneeded = ({ target }) => {
+    const { result } = target
     storeNames.forEach(storeName => {
       if (!result.objectStoreNames.contains(storeName)) {
         const storeCreation = result.createObjectStore(storeName)
-        databaseNames.add(storeName)
         storeCreation.onerror = err => reject(err.target.error)
       }
     })
@@ -37,28 +37,28 @@ const openDatabase = (name = 'default', storeNames) => new Promise((resolve, rej
   /*
   Connected databases are stored to be disconnected before deletion.
   */
-  db.onsuccess = e => {
-    connections.push(db)
-    resolve(e.target.result)
+  database.onsuccess = ({ target }) => {
+    connections.push(database)
+    resolve(target.result)
   }
 
-  db.onerror = e => reject(e.target.result)
-  return db
+  database.onerror = ({ target }) => reject(target.result)
+  return database
 })
 
 
 /*
 Sets an entry by a given key/value pair or a dataset of entries.
-- db              object              Database object
+- database              object              Database object
 - storeName       string              Store name
 - key             structured          Key of entry
 - dataValue       structured          Value of entry
 - entries         array | object      Entries to set
 - Return          object              db64 object
 */
-const setData = async (db, storeName, key, dataValue, entries) => {
+const setData = async (database, storeName, key, dataValue, entries) => {
   try {
-    const obStore = (db.transaction([storeName], 'readwrite')).objectStore(storeName)
+    const obStore = (database.transaction([storeName], 'readwrite')).objectStore(storeName)
 
     if (entries) {
       const dataEntries = isArray(dataValue)
@@ -77,15 +77,15 @@ const setData = async (db, storeName, key, dataValue, entries) => {
 
 /*
 Gets an entry by a given key/value pair or a dataset of entries.
-- db            object              Database object
+- database            object              Database object
 - storeName     string              Store name
 - key           structured          Key of entry
 - entries       array | object      Entries to get
 - Return        object              A promise fulfilled with the queried data
 */
-const getData = async (db, storeName, key, entries) => {
+const getData = async (database, storeName, key, entries) => {
   return new Promise((resolve) => {
-    const objectStore = (db.transaction([storeName])).objectStore(storeName)
+    const objectStore = (database.transaction([storeName])).objectStore(storeName)
     let dataRequest
     if (entries) {
       const results = {}
@@ -111,14 +111,14 @@ const getData = async (db, storeName, key, entries) => {
 
 /*
 Deletes an entry for a given store by key.
-- db            object          Database object
+- database            object          Database object
 - storeName     string          Store name
 - key           structured      Key of entry
 - Return        object          db64
 */
-const deleteData = async (db, storeName, key) => {
+const deleteData = async (database, storeName, key) => {
   try {
-    const objectStore = (db.transaction([storeName], 'readwrite')).objectStore(storeName)
+    const objectStore = (database.transaction([storeName], 'readwrite')).objectStore(storeName)
     const cursorRequest = objectStore.openCursor()
 
     cursorRequest.onsuccess = e => {
@@ -138,13 +138,13 @@ const deleteData = async (db, storeName, key) => {
 
 /*
 Empties a store.
-- db              object              Database object
+- database              object              Database object
 - storeName       string              Store name
 - Return          object              A promise fulfilled with the queried data
 */
-const clearStore = (db, storeName) => {
+const clearStore = (database, storeName) => {
   return new Promise((resolve, reject) => {
-    const objectStore = (db.transaction([storeName], 'readwrite')).objectStore(storeName)
+    const objectStore = (database.transaction([storeName], 'readwrite')).objectStore(storeName)
     const objectStoreRequest = objectStore.clear()
 
     objectStoreRequest.onsuccess = resolve(db64)
@@ -164,12 +164,12 @@ const deleteDB = name => {
 
     deleteRequest.onsuccess = () => resolve(db64)
 
-    deleteRequest.onerror = e => reject(new Error(`Error deleting database: ${e.target.error}`))
+    deleteRequest.onerror = ({target}) => reject(new Error(`Error deleting database: ${target.error}`))
 
-    deleteRequest.onblocked = e => {
-      for (const db of connections) {
-        if (db.result.name === name) {
-          db.result.close()
+    deleteRequest.onblocked = () => {
+      for (const database of connections) {
+        if (database.result.name === name) {
+          database.result.close()
         }
       }
       deleteDB(name)
@@ -188,29 +188,35 @@ const db64 = {
     return db64
   },
   use: (name, storeName) => {
-    console.log('databaseNames', )
-    if (!databaseNames.has(storeName)) return console.error('A database and store needs to be created first')
+    const request = indexedDB.open(name, 1)
+    
+    request.onsuccess = (event) => {
+      const db = event.target.result
+      if(!db.objectStoreNames.contains(storeName)) {
+        console.error(`Store ${storeName} does not exist`)
+      }
+    }
 
     return {
       set: async (key, value) => openDatabase(name, storeName)
-        .then(db => setData(db, storeName, key, value))
+        .then(database => setData(database, storeName, key, value))
         .catch(console.error),
       setEntries: async (value) => openDatabase(name, storeName)
-        .then(db => setData(db, storeName, null, value, 'entries'))
+        .then(database => setData(database, storeName, null, value, 'entries'))
         .catch(console.error),
       get: async key => openDatabase(name, storeName)
-        .then(db => getData(db, storeName, key))
+        .then(database => getData(database, storeName, key))
         .catch(console.error),
       getEntries: async (keys) => openDatabase(name, storeName)
-        .then(db => getData(db, storeName, keys, 'entries'))
+        .then(database => getData(database, storeName, keys, 'entries'))
         .catch(console.error),
       delete: async (keys) => openDatabase(name, storeName)
-        .then(db => deleteData(db, storeName, keys))
+        .then(database => deleteData(database, storeName, keys))
         .catch(console.error)
     }
   },
   clear: async (name, storeName) => openDatabase(name, storeName)
-    .then(db => clearStore(db, storeName))
+    .then(database => clearStore(database, storeName))
     .catch(console.error),
   delete: async name => deleteDB(name)
     .catch(console.error)
