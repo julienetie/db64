@@ -1,6 +1,12 @@
 const { isArray } = Array
-
 const connections = []
+
+/*
+Creates a new database with given stores if the database and stores don't exist.
+- name            string      The databse name
+- storeNames      array       An array of store names
+- Return          object      The given database
+*/
 const openDB = (name = 'default', storeNames) => new Promise((resolve, reject) => {
   let db
   try {
@@ -29,6 +35,15 @@ const openDB = (name = 'default', storeNames) => new Promise((resolve, reject) =
   return db
 })
 
+/*
+Sets an entry by a given key/value pair or a dataset of entries.
+- db              object              Database object
+- storeName       string              Store name
+- key             structured          Key of entry
+- dataValue       structured          Value of entry
+- entries         array | object      Entries to set
+- Return          object              db64 object
+*/
 const setData = async (db, storeName, key, dataValue, entries) => {
   try {
     const obStore = (db.transaction([storeName], 'readwrite')).objectStore(storeName)
@@ -47,6 +62,14 @@ const setData = async (db, storeName, key, dataValue, entries) => {
   return db64
 }
 
+/*
+Gets an entry by a given key/value pair or a dataset of entries.
+- db            object              Database object
+- storeName     string              Store name
+- key           structured          Key of entry
+- entries       array | object      Entries to get
+- Return        object              A promise fulfilled with the queried data
+*/
 const getData = async (db, storeName, key, entries) => {
   return new Promise((resolve) => {
     const objectStore = (db.transaction([storeName])).objectStore(storeName)
@@ -72,6 +95,13 @@ const getData = async (db, storeName, key, entries) => {
   })
 }
 
+/*
+Deletes an entry for a given store by key.
+- db            object          Database object
+- storeName     string          Store name
+- key           structured      Key of entry
+- Return        object          db64
+*/
 const deleteData = async (db, storeName, key) => {
   try {
     const objectStore = (db.transaction([storeName], 'readwrite')).objectStore(storeName)
@@ -91,6 +121,12 @@ const deleteData = async (db, storeName, key) => {
   return db64
 }
 
+/*
+Empties a store.
+- db              object              Database object
+- storeName       string              Store name
+- Return          object              A promise fulfilled with the queried data
+*/
 const clearStore = (db, storeName) => {
   return new Promise((resolve, reject) => {
     const objectStore = (db.transaction([storeName], 'readwrite')).objectStore(storeName)
@@ -101,6 +137,11 @@ const clearStore = (db, storeName) => {
   })
 }
 
+/*
+Deletes a given databse.
+- name          string      Database to delete
+- Return        object      A promise fulfilled with the queried data
+*/
 const deleteDB = name => {
   return new Promise((resolve, reject) => {
     const deleteRequest = indexedDB.deleteDatabase(name)
@@ -121,6 +162,9 @@ const deleteDB = name => {
 }
 
 let hasDBandStores = false
+
+/*
+The db64 object */
 const db64 = {
   create: async (name, storeNames) => {
     if (!isArray(storeNames)) return console.error('storeNames should be an array')
@@ -147,6 +191,7 @@ const db64 = {
       delete: async (keys) => openDB(name, storeName)
         .then(db => deleteData(db, storeName, keys))
         .catch(console.error)
+
     }
   },
   clear: async (name, storeName) => openDB(name, storeName)
