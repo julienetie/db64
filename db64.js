@@ -1,6 +1,5 @@
 const { isArray } = Array
 const connections = []
-const databaseNames = new Set()
 
 
 /*
@@ -164,7 +163,7 @@ const deleteDB = name => {
 
     deleteRequest.onsuccess = () => resolve(db64)
 
-    deleteRequest.onerror = ({target}) => reject(new Error(`Error deleting database: ${target.error}`))
+    deleteRequest.onerror = ({ target }) => reject(new Error(`Error deleting database: ${target.error}`))
 
     deleteRequest.onblocked = () => {
       for (const database of connections) {
@@ -189,10 +188,10 @@ const db64 = {
   },
   use: (name, storeName) => {
     const request = indexedDB.open(name, 1)
-    
+
     request.onsuccess = (event) => {
       const db = event.target.result
-      if(!db.objectStoreNames.contains(storeName)) {
+      if (!db.objectStoreNames.contains(storeName)) {
         console.error(`Store ${storeName} does not exist`)
       }
     }
