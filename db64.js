@@ -1,6 +1,6 @@
 const { isArray } = Array
 const connections = []
-
+const databaseNames = new Set()
 
 /*
 Creates a new database with given stores if the database and stores don't exist.
@@ -8,7 +8,7 @@ Creates a new database with given stores if the database and stores don't exist.
 - storeNames      array       An array of store names
 - Return          object      The given database
 */
-const openDB = (name = 'default', storeNames) => new Promise((resolve, reject) => {
+const openDatabase = (name = 'default', storeNames) => new Promise((resolve, reject) => {
   let db
   try {
     db = window.indexedDB.open(name, 1)
@@ -27,6 +27,7 @@ const openDB = (name = 'default', storeNames) => new Promise((resolve, reject) =
     storeNames.forEach(storeName => {
       if (!result.objectStoreNames.contains(storeName)) {
         const storeCreation = result.createObjectStore(storeName)
+        databaseNames.add(storeName)
         storeCreation.onerror = err => reject(err.target.error)
       }
     })
@@ -37,7 +38,6 @@ const openDB = (name = 'default', storeNames) => new Promise((resolve, reject) =
   Connected databases are stored to be disconnected before deletion.
   */
   db.onsuccess = e => {
-    hasDBandStores = true
     connections.push(db)
     resolve(e.target.result)
   }
@@ -178,40 +178,38 @@ const deleteDB = name => {
 }
 
 
-let hasDBandStores = false
-
-
 /*
 The db64 object */
 const db64 = {
   create: async (name, storeNames) => {
     if (!isArray(storeNames)) return console.error('storeNames should be an array')
 
-    await openDB(name, storeNames, hasDBandStores)
+    await openDatabase(name, storeNames)
     return db64
   },
   use: (name, storeName) => {
-    if (!hasDBandStores) return console.error('A database and store needs to be created first')
+    console.log('databaseNames', )
+    if (!databaseNames.has(storeName)) return console.error('A database and store needs to be created first')
 
     return {
-      set: async (key, value) => openDB(name, storeName)
+      set: async (key, value) => openDatabase(name, storeName)
         .then(db => setData(db, storeName, key, value))
         .catch(console.error),
-      setEntries: async (value) => openDB(name, storeName)
+      setEntries: async (value) => openDatabase(name, storeName)
         .then(db => setData(db, storeName, null, value, 'entries'))
         .catch(console.error),
-      get: async key => openDB(name, storeName)
+      get: async key => openDatabase(name, storeName)
         .then(db => getData(db, storeName, key))
         .catch(console.error),
-      getEntries: async (keys) => openDB(name, storeName)
+      getEntries: async (keys) => openDatabase(name, storeName)
         .then(db => getData(db, storeName, keys, 'entries'))
         .catch(console.error),
-      delete: async (keys) => openDB(name, storeName)
+      delete: async (keys) => openDatabase(name, storeName)
         .then(db => deleteData(db, storeName, keys))
         .catch(console.error)
     }
   },
-  clear: async (name, storeName) => openDB(name, storeName)
+  clear: async (name, storeName) => openDatabase(name, storeName)
     .then(db => clearStore(db, storeName))
     .catch(console.error),
   delete: async name => deleteDB(name)
