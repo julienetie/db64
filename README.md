@@ -3,7 +3,7 @@
 
 ## A Practical IndexedDB API
 
-A more practcal alternative to [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage). db64 supports [all major browsers](https://caniuse.com/indexeddb).  
+A more practical alternative to [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage). db64 supports [all major browsers](https://caniuse.com/indexeddb).  
 
 
 ### db64
@@ -25,7 +25,7 @@ try {
   const snes = db64.use('Games', 'Super Nintendo')
 
   // Set multiple entries into Super Nintendo
-  await snes.setEntries({ adventure: 'Mario Wrold', rpg: 'Zelda', fighting: 'Street Fighter II' })
+  await snes.setEntries({ adventure: 'Mario World', rpg: 'Zelda', fighting: 'Street Fighter II' })
 
   // Get multiple entries from Super Nintendo
   await snes.getEntries(['adventure', 'fighting']) // { adventure: 'Mario Wrold', fighting: 'Street Fighter II' }
