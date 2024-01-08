@@ -11,7 +11,7 @@ A more practcal alternative to [localStorage](https://developer.mozilla.org/en-U
 - Set and get single or multiple entries
 - Delete single, multiple or all entries
 - No versioning 
-- 2.47KB minified
+- {{ size }} minified
 
 E.g.
 ```javascript
