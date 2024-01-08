@@ -221,4 +221,4 @@ const db64 = {
     .catch(console.error)
 }
 
-export default db64
+module.exports = db64
