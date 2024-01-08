@@ -192,7 +192,7 @@ const db64 = {
     request.onsuccess = (event) => {
       const db = event.target.result
       if (!db.objectStoreNames.contains(storeName)) {
-        console.error(`Store ${storeName} does not exist`)
+        console.error(`Store ${storeName} does not exist. You may need to manage the lifecycle of databse "${name}" if outdated.`)
       }
     }
 

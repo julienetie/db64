@@ -34,8 +34,8 @@ const createCJS = async () => {
     console.info(`Created ${paths.esMinDist}`)
 
     // ES Map
-    await fs.writeFile(paths.esMinMapDist, minifiedESData.map, 'utf8')
-    console.info(`Created ${paths.esMinMapDist}`)
+    // await fs.writeFile(paths.esMinMapDist, minifiedESData.map, 'utf8')
+    // console.info(`Created ${paths.esMinMapDist}`)
 
     // CJS
     await fs.writeFile(paths.cjsDist, insertCJSImport, 'utf8')
@@ -46,8 +46,8 @@ const createCJS = async () => {
     console.info(`Created ${paths.cjsMinDist}`)
 
     // CJS Map
-    await fs.writeFile(paths.cjsMinMapDist, minifiedCJSData.map, 'utf8')
-    console.info(`Created ${paths.cjsMinMapDist}`)
+    // await fs.writeFile(paths.cjsMinMapDist, minifiedCJSData.map, 'utf8')
+    // console.info(`Created ${paths.cjsMinMapDist}`)
 
   } catch (err) {
     console.error('Error:', err)
