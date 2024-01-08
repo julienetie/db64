@@ -25,7 +25,7 @@ try {
   const snes = db64.use('Games', 'Super Nintendo')
 
   // Set multiple entries into Super Nintendo
-  await snes.setEntries({ adventure: 'Mario Wrold', rpg: 'Zelda', fighting: 'Street Fighter II' })
+  await snes.setEntries({ adventure: 'Mario World', rpg: 'Zelda', fighting: 'Street Fighter II' })
 
   // Get multiple entries from Super Nintendo
   await snes.getEntries(['adventure', 'fighting']) // { adventure: 'Mario Wrold', fighting: 'Street Fighter II' }
