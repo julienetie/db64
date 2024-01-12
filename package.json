@@ -36,6 +36,7 @@
     "eslint-plugin-n": "^16.5.0",
     "eslint-plugin-promise": "^6.1.1",
     "http-server": "^14.1.1",
-    "terser": "^5.26.0"
+    "terser": "^5.26.0",
+    "typescript": "^5.3.3"
   }
 }
