@@ -10,8 +10,7 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/http-server -a 127.0.0.1 -p 2222 -o",
-    "lint": "./node_modules/.bin/eslint db64.js make-cjs.js",
-    "lint:fix": "./node_modules/.bin/eslint --fix db64.js make-cjs.js",
+    "lint": "./node_modules/.bin/eslint --fix ./src ./create-distribution.js",
     "prepublishOnly": "node create-distribution.js"
   },
   "repository": {
