@@ -133,9 +133,8 @@ Here's the db64 workflow:
     - _**When in the future you decide to add more stores at initialisation**_
     - _When you want to remove stores, especially for data protection_
 
-It's important to consider step 4, if not you may leave users stuck because everything looks fine on your computer.
-Step 4 isn't specific to IndexedDB, it also applies to _localStorage_ but it's more prevalent with IndexedDB as there's 
-a higher risk of the application breaking if you decide to make chages to the codebase in the future.
+It's important to consider step 4, if not you may leave users stuck because everything will look fine on your computer.
+Step 4 isn't specific to IndexedDB, it mostly applies to _localStorage_. It's the same for all persistent storage on all platforms. Your application is at risk of breaking if you decide to change the persistent data structure or add to the structure in the future without preemptively managing common user cases.
 
 If you do require versioning consider using [idb](https://github.com/jakearchibald/idb). **If you're not building a progressive web app (PWA) you probably don't need versioning**.
 
