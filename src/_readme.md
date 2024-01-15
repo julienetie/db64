@@ -146,8 +146,8 @@ switch (e.name) {
     case 'NotFoundError':
     // The operation failed because the requested database object could not be found.
     case 'Db64MissingStore':
-    /* 
-    An anticipated NotFoundError to be treated in the same way.
+    /*
+    An anticipated NotFoundError. Manage both cases togeather.
     You will likely need to re-create your dateabase here with necessary stores 
     and re-populate with existing data if necessary. */ 
         break
