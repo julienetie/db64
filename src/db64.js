@@ -9,20 +9,14 @@ Creates a new database with given stores if the database and stores don't exist.
 - Return          object      The given database
 */
 const openDatabase = (name = 'default', storeNames) => new Promise((resolve, reject) => {
-  let database
-  try {
-    database = window.indexedDB.open(name, 1)
-  } catch (e) {
-    reject(e)
-  }
-
+  const DBOpenRequest = window.indexedDB.open(name, 1)
 
   /*
   db64 does not revolve around versioning. Therefore, this function will only run once
   for every new set of databases created. Each set of databases and stores can only be
   created once and cannot be modified. Therefore, all databases have a version of 1.
   */
-  database.onupgradeneeded = ({ target }) => {
+  DBOpenRequest.onupgradeneeded = ({ target }) => {
     const { result } = target
     storeNames.forEach(storeName => {
       if (!result.objectStoreNames.contains(storeName)) {
@@ -36,13 +30,14 @@ const openDatabase = (name = 'default', storeNames) => new Promise((resolve, rej
   /*
   Connected databases are stored to be disconnected before deletion.
   */
-  database.onsuccess = ({ target }) => {
-    connections.push(database)
+  DBOpenRequest.onsuccess = ({ target }) => {
+    connections.push(DBOpenRequest)
     resolve(target.result)
   }
 
-  database.onerror = ({ target }) => reject(target.result)
-  return database
+  DBOpenRequest.onerror = ({ target }) => {
+    reject(target.result)
+  }
 })
 
 
@@ -55,23 +50,22 @@ Sets an entry by a given key/value pair or a dataset of entries.
 - entries         array | object      Entries to set
 - Return          object              db64 object
 */
-const setData = async (database, storeName, key, dataValue, entries) => {
+const setData = async (database, storeName, key, dataValue, entries) => new Promise((resolve, reject) => {
   try {
     const obStore = (database.transaction([storeName], 'readwrite')).objectStore(storeName)
-
     if (entries) {
       const dataEntries = isArray(dataValue)
         ? () => dataValue.map((fruitName, index) => obStore.put(fruitName, index))
         : () => Object.entries(dataValue).map(([key, value]) => obStore.put(value, key))
-      await Promise.all(dataEntries())
+      resolve(Promise.all(dataEntries()))
     } else {
-      await obStore.put(dataValue, key)
+      resolve(obStore.put(dataValue, key))
     }
+    resolve(db64)
   } catch (e) {
-    console.error(e)
+    reject(e)
   }
-  return db64
-}
+})
 
 
 /*
@@ -82,30 +76,29 @@ Gets an entry by a given key/value pair or a dataset of entries.
 - entries       array | object      Entries to get
 - Return        object              A promise fulfilled with the queried data
 */
-const getData = async (database, storeName, key, entries) => {
-  return new Promise((resolve) => {
-    const objectStore = (database.transaction([storeName])).objectStore(storeName)
-    let dataRequest
-    if (entries) {
-      const results = {}
-      const cursorRequest = objectStore.openCursor()
+const getData = async (database, storeName, key, entries) => new Promise((resolve) => {
+  const objectStore = (database.transaction([storeName])).objectStore(storeName)
 
-      cursorRequest.onsuccess = e => {
-        const cursor = e.target.result
+  if (entries) {
+    const results = {}
+    const cursorRequest = objectStore.openCursor()
 
-        if (cursor) {
-          if (key.includes(cursor.key)) results[cursor.key] = cursor.value
-          cursor.continue()
-        } else {
-          resolve(results)
-        }
+    cursorRequest.onsuccess = e => {
+      const cursor = e.target.result
+
+      if (cursor) {
+        if (key.includes(cursor.key)) results[cursor.key] = cursor.value
+        cursor.continue()
+      } else {
+        resolve(results)
       }
-    } else {
-      dataRequest = objectStore.get(key)
-      dataRequest.onsuccess = () => resolve(dataRequest.result)
     }
-  })
-}
+  } else {
+    const dataRequest = objectStore.get(key)
+    dataRequest.onsuccess = () => resolve(dataRequest.result)
+  }
+})
+
 
 
 /*
@@ -115,7 +108,7 @@ Deletes an entry for a given store by key.
 - key           structured      Key of entry
 - Return        object          db64
 */
-const deleteData = async (database, storeName, key) => {
+const deleteData = async (database, storeName, key) => new Promise((resolve, reject) => {
   try {
     const objectStore = (database.transaction([storeName], 'readwrite')).objectStore(storeName)
     const cursorRequest = objectStore.openCursor()
@@ -128,11 +121,11 @@ const deleteData = async (database, storeName, key) => {
         cursor.continue()
       }
     }
+    resolve(db64)
   } catch (e) {
-    console.error(e)
+    reject(e)
   }
-  return db64
-}
+})
 
 
 /*
@@ -141,15 +134,13 @@ Empties a store.
 - storeName       string              Store name
 - Return          object              A promise fulfilled with the queried data
 */
-const clearStore = (database, storeName) => {
-  return new Promise((resolve, reject) => {
-    const objectStore = (database.transaction([storeName], 'readwrite')).objectStore(storeName)
-    const objectStoreRequest = objectStore.clear()
+const clearStore = (database, storeName) => new Promise((resolve, reject) => {
+  const objectStore = (database.transaction([storeName], 'readwrite')).objectStore(storeName)
+  const objectStoreRequest = objectStore.clear()
 
-    objectStoreRequest.onsuccess = resolve(db64)
-    objectStoreRequest.onerror = e => reject(e.target.error)
-  })
-}
+  objectStoreRequest.onsuccess = () => resolve(db64)
+  objectStoreRequest.onerror = e => reject(e.target.error)
+})
 
 
 /*
@@ -158,20 +149,27 @@ Deletes a given databse.
 - Return        object      A promise fulfilled with the queried data
 */
 const deleteDB = name => {
+  const deletedDBs = []
   return new Promise((resolve, reject) => {
-    const deleteRequest = indexedDB.deleteDatabase(name)
+    const DBDeleteRequest = indexedDB.deleteDatabase(name)
 
-    deleteRequest.onsuccess = () => resolve(db64)
+    DBDeleteRequest.onsuccess = () => resolve(db64)
 
-    deleteRequest.onerror = ({ target }) => reject(new Error(`Error deleting database: ${target.error}`))
+    DBDeleteRequest.onerror = ({ target }) => reject(new Error(`Error deleting database: ${target.error}`))
 
-    deleteRequest.onblocked = () => {
+    DBDeleteRequest.onblocked = () => {
       for (const database of connections) {
         if (database.result.name === name) {
           database.result.close()
+          deletedDBs.push(name)
         }
       }
-      deleteDB(name)
+
+      if (!deletedDBs.includes(name)) {
+        deleteDB(name)
+      } else {
+        resolve(db64)
+      }
     }
   })
 }
@@ -181,44 +179,31 @@ const deleteDB = name => {
 The db64 object */
 const db64 = {
   create: async (name, storeNames) => {
-    if (!isArray(storeNames)) return console.error('storeNames should be an array')
+    if (typeof name !== 'string') console.error(`${name} should be a string`)
+    if (!isArray(storeNames)) return console.error(`${storeNames} should be an array`)
 
-    await openDatabase(name, storeNames)
-    return db64
+    return openDatabase(name, storeNames)
   },
-  use: (name, storeName) => {
-    const request = indexedDB.open(name, 1)
-
-    request.onsuccess = (event) => {
-      const db = event.target.result
-      if (!db.objectStoreNames.contains(storeName)) {
-        console.error(`Store ${storeName} does not exist. You may need to manage the lifecycle of databse "${name}" if outdated.`)
-      }
-    }
+  use: async (name, storeName) => {
+    if (typeof name !== 'string') console.error(`${name} should be a string`)
+    if (typeof name !== 'string') console.error(`${storeName} should be a string`)
 
     return {
-      set: async (key, value) => openDatabase(name, storeName)
-        .then(database => setData(database, storeName, key, value))
-        .catch(console.error),
+      set: async (key, value) => openDatabase(name, [storeName])
+        .then(database => setData(database, storeName, key, value)),
       setEntries: async (value) => openDatabase(name, storeName)
-        .then(database => setData(database, storeName, null, value, 'entries'))
-        .catch(console.error),
+        .then(database => setData(database, storeName, null, value, 'entries')),
       get: async key => openDatabase(name, storeName)
-        .then(database => getData(database, storeName, key))
-        .catch(console.error),
+        .then(database => getData(database, storeName, key)),
       getEntries: async (keys) => openDatabase(name, storeName)
-        .then(database => getData(database, storeName, keys, 'entries'))
-        .catch(console.error),
+        .then(database => getData(database, storeName, keys, 'entries')),
       delete: async (keys) => openDatabase(name, storeName)
-        .then(database => deleteData(database, storeName, keys))
-        .catch(console.error)
+        .then(database => deleteData(database, storeName, keys)),
     }
   },
   clear: async (name, storeName) => openDatabase(name, storeName)
-    .then(database => clearStore(database, storeName))
-    .catch(console.error),
+    .then(database => clearStore(database, storeName)),
   delete: async name => deleteDB(name)
-    .catch(console.error)
 }
 
 export default db64

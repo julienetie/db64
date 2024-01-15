@@ -34,8 +34,10 @@
 
             console.log('createReturn returns db64:', shallowEqual(createReturn, db64))
 
+
+            
             // Assign a variable with the selected database and store to modify 
-            const snes = db64.use('Games', 'Super Nintendo')
+            const snes = await db64.use('Games', 'Super Nintendo')
 
 
 
@@ -96,7 +98,9 @@
 
 
             // Create variable to modify Gameboy store
-            const gb = db64.use('Games', 'Gameboy')
+            const gb = await db64.use('Games', 'Gameboy')
+
+            console.log('USE GAMEBOY')
 
 
 
@@ -106,12 +110,55 @@
 
             console.info('.clearStore returns db64:', shallowEqual(clearStore, db64))
 
-            
+
+
             // Delete db
             const db64Obj = await db64.delete('Games')
             console.log('db64Obj', db64Obj)
         } catch (e) {
-            console.error(e)
+            console.log('TRY', e.name)
+            switch (e.name) {
+                // Manage missing store
+                case 'NotFoundError':
+                // The operation failed because the requested database object could not be found.
+                case 'Db64MissingStore':
+                    console.log('remake')
+                    // Delete the store's database
+                    await db64.delete('Games')
+                    // Re-create the databse with all it's stores 
+                    await db64.create('Games', ['Super Nintendo', 'Gameboy'])
+                    break
+                case 'AbortError':
+                    // A request was aborted.
+                    break
+                case 'SecurityError':
+                    // Handel security error 
+                    break
+                case 'DataError':
+                    // Data provided to an operation does not meet requirements.
+                    break
+                case 'TransactionInactiveError':
+                    // A request was placed against a transaction which is currently not active, or which is finished.
+                    break
+                case 'InvalidStateError':
+                    // The object is in an invalid state.
+                    break
+                case 'ConstraintError':
+                    // A mutation operation in the transaction failed because a constraint was not satisfied.
+                    break
+                case 'SyntaxError':
+                    // The keyPath argument contains an invalid key path.
+                    break
+                case 'QuotaExceededError':
+                    // The operation failed because there was not enough remaining storage space, or the storage quota was reached and the user declined to give more space to the database.
+                    break
+                case 'ReadOnlyError':
+                    // The mutating operation was attempted in a read-only transaction.
+                    break
+                case 'UnknownError':
+                    // The operation failed for reasons unrelated to the database itself and not covered by any other errors.
+                    break
+            }
         }
 
     </script>
