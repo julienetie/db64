@@ -48,6 +48,10 @@ try {
 - The API is considered as (low level) and can be challenging as a replacement for localStorage
 - Removing databases and stores is not straight forward nor necessary, and usually requires versioning
 
+> **_(Just give me the builds)_**
+> - `git@github.com:julienetie/db64.git`
+> - `cd db64 && npm i`
+> - `npm run prepublishOnly`
 
 **Install**
 ```
