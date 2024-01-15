@@ -48,6 +48,10 @@ try {
 - The API is considered as (low level) and can be challenging as a replacement for localStorage
 - Removing databases and stores is not straight forward nor necessary, and usually requires versioning
 
+> **_Just give me the builds_**
+> - `git@github.com:julienetie/db64.git`
+> - `cd db64 && npm i`
+> - `npm run prepublishOnly`
 
 **Install**
 ```
@@ -135,6 +139,50 @@ Here's the db64 workflow:
 
 It's important to consider step 4, if not you may leave users stuck because everything will look fine on your computer.
 Step 4 isn't specific to IndexedDB, it mostly applies to _localStorage_. It's the same for all persistent storage on all platforms. Your application is at risk of breaking if you decide to change the persistent data structure or add to the structure in the future without preemptively managing common user cases.
+
+```javascript
+// An exaustive list for handeling errors for db64:
+switch (e.name) {
+    case 'NotFoundError':
+    // The operation failed because the requested database object could not be found.
+    case 'Db64MissingStore':
+    /*
+    An anticipated NotFoundError. Manage both cases togeather.
+    You will likely need to re-create your dateabase here with necessary stores 
+    and re-populate with existing data if necessary. */ 
+        break
+    case 'AbortError':
+        // A request was aborted.
+        break
+    case 'SecurityError':
+        // Handel security error 
+        break
+    case 'DataError':
+        // Data provided to an operation does not meet requirements.
+        break
+    case 'TransactionInactiveError':
+        // A request was placed against a transaction which is currently not active, or which is finished.
+        break
+    case 'InvalidStateError':
+        // The object is in an invalid state.
+        break
+    case 'ConstraintError':
+        // A mutation operation in the transaction failed because a constraint was not satisfied.
+        break
+    case 'SyntaxError':
+        // The keyPath argument contains an invalid key path.
+        break
+    case 'QuotaExceededError':
+        // The operation failed because there was not enough remaining storage space, or the storage quota was reached and the user declined to give more space to the database.
+        break
+    case 'ReadOnlyError':
+        // The mutating operation was attempted in a read-only transaction.
+        break
+    case 'UnknownError':
+        // The operation failed for reasons unrelated to the database itself and not covered by any other errors.
+        break
+}
+```
 
 If you do require versioning consider using [idb](https://github.com/jakearchibald/idb). **If you're not building a progressive web app (PWA) you probably don't need versioning**.
 
