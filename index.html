@@ -35,9 +35,9 @@
             console.log('createReturn returns db64:', shallowEqual(createReturn, db64))
 
 
-            
+
             // Assign a variable with the selected database and store to modify 
-            const snes = await db64.use('Games', 'Super Nintendo')
+            const snes = db64.use('Games', 'Super Nintendo')
 
 
 
@@ -98,7 +98,7 @@
 
 
             // Create variable to modify Gameboy store
-            const gb = await db64.use('Games', 'Gameboy')
+            const gb = db64.use('Games', 'Gameboy')
 
             console.log('USE GAMEBOY')
 

@@ -184,7 +184,7 @@ const db64 = {
 
     return openDatabase(name, storeNames)
   },
-  use: async (name, storeName) => {
+  use: (name, storeName) => {
     if (typeof name !== 'string') console.error(`${name} should be a string`)
     if (typeof name !== 'string') console.error(`${storeName} should be a string`)
 
