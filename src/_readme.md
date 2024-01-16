@@ -11,7 +11,7 @@ A more practical alternative to [localStorage](https://developer.mozilla.org/en-
 - Set and get single or multiple entries
 - Delete single, multiple or all entries
 - No versioning 
-- {{ size }} minified
+- {{ size }} minified | {{ brotliSize }} _(brotli)_
 
 E.g.
 ```javascript

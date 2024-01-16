@@ -1,6 +1,6 @@
 {
   "name": "db64",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "A Practical IndexedDB API",
   "main": "db64.js",
   "type": "module",
@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/julienetie/db64#readme",
   "devDependencies": {
+    "brotli-size": "^4.0.0",
     "eslint": "^8.56.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.29.1",

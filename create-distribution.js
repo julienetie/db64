@@ -2,6 +2,7 @@ import fs from 'fs/promises'
 import path, { dirname } from 'path'
 import { minify } from 'terser'
 import { execSync } from 'child_process'
+import brotliSize from 'brotli-size'
 
 const currentFilePath = (new URL(import.meta.url)).pathname
 const __dirname = dirname(currentFilePath)
@@ -83,8 +84,12 @@ const createCJS = async () => {
     const stats = await fs.stat(paths.esMinDist)
 
     // Readme
+    const brotliSizeBytes = brotliSize.sync(minifiedESData.code)
     const fileSizeInKB = stats.size / 1024
-    const readmeWithSize = readmeSrc.replace(/{{ size }}/g, `${fileSizeInKB.toFixed(2)}KB`)
+
+    const readmeWithSize = readmeSrc
+      .replace(/{{ size }}/g, `${fileSizeInKB.toFixed(2)}KB`)
+      .replace(/{{ brotliSize }}/g, `${brotliSizeBytes} bytes`)
     await fs.writeFile(paths.readmeRoot, readmeWithSize, 'utf8')
     console.info(`Created ${paths.readmeRoot}`)
   } catch (err) {

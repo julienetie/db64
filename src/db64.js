@@ -35,9 +35,7 @@ const openDatabase = (name = 'default', storeNames) => new Promise((resolve, rej
     resolve(target.result)
   }
 
-  DBOpenRequest.onerror = ({ target }) => {
-    reject(target.result)
-  }
+  DBOpenRequest.onerror = ({ target }) => reject(target.result)
 })
 
 
@@ -61,7 +59,6 @@ const setData = async (database, storeName, key, dataValue, entries) => new Prom
     } else {
       resolve(obStore.put(dataValue, key))
     }
-    resolve(db64)
   } catch (e) {
     reject(e)
   }
@@ -76,7 +73,7 @@ Gets an entry by a given key/value pair or a dataset of entries.
 - entries       array | object      Entries to get
 - Return        object              A promise fulfilled with the queried data
 */
-const getData = async (database, storeName, key, entries) => new Promise((resolve) => {
+const getData = async (database, storeName, key, entries) => new Promise((resolve, reject) => {
   const objectStore = (database.transaction([storeName])).objectStore(storeName)
 
   if (entries) {
@@ -93,9 +90,12 @@ const getData = async (database, storeName, key, entries) => new Promise((resolv
         resolve(results)
       }
     }
+
+    cursorRequest.onerror = e => reject(e)
   } else {
     const dataRequest = objectStore.get(key)
     dataRequest.onsuccess = () => resolve(dataRequest.result)
+    dataRequest.onerror = e => reject(e)
   }
 })
 
@@ -121,6 +121,8 @@ const deleteData = async (database, storeName, key) => new Promise((resolve, rej
         cursor.continue()
       }
     }
+    cursorRequest.onerror = e => reject(e)
+
     resolve(db64)
   } catch (e) {
     reject(e)
@@ -155,7 +157,7 @@ const deleteDB = name => {
 
     DBDeleteRequest.onsuccess = () => resolve(db64)
 
-    DBDeleteRequest.onerror = ({ target }) => reject(new Error(`Error deleting database: ${target.error}`))
+    DBDeleteRequest.onerror = e => reject(e)
 
     DBDeleteRequest.onblocked = () => {
       for (const database of connections) {
@@ -198,7 +200,7 @@ const db64 = {
       getEntries: async (keys) => openDatabase(name, storeName)
         .then(database => getData(database, storeName, keys, 'entries')),
       delete: async (keys) => openDatabase(name, storeName)
-        .then(database => deleteData(database, storeName, keys)),
+        .then(database => deleteData(database, storeName, keys))
     }
   },
   clear: async (name, storeName) => openDatabase(name, storeName)

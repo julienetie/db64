@@ -32,8 +32,6 @@
             await db64.create('Games', ['Super Nintendo', 'Gameboy'])
             const createReturn = await db64.create('Sports', ['Football', 'Tennis', 'Basketball']) // An example.
 
-            console.log('createReturn returns db64:', shallowEqual(createReturn, db64))
-
 
 
             // Assign a variable with the selected database and store to modify 
@@ -44,21 +42,15 @@
             // .set key 5
             const setReturn = await snes.set(5, 'Donkey Kong Country')
 
-            console.info('.set returns db64:', shallowEqual(setReturn, db64))
-
 
 
             // .setEntries via Array for keys 0,1,2,3,4 
             const setEntriesArrayReturn = await snes.setEntries(['Mario Wrold', 'Zelda', 'Super Metroid', 'F-Zero', 'Street Fighter II'])
 
-            console.info('.setEntriesArrayReturn returns db64:', shallowEqual(setEntriesArrayReturn, db64))
-
 
 
             // .setEntries via Object for keys racing, rpg, fighting, adventure
             const setEntriesObjectReturn = await snes.setEntries({ adventure: 'Mario Wrold', rpg: 'Zelda', racing: 'F-Zero', fighting: 'Street Fighter II' })
-
-            console.info('.setEntriesObjectReturn returns db64:', shallowEqual(setEntriesObjectReturn, db64))
 
 
 
@@ -100,9 +92,7 @@
             // Create variable to modify Gameboy store
             const gb = db64.use('Games', 'Gameboy')
 
-            console.log('USE GAMEBOY')
-
-
+   
 
             // .clear all entries for 'Gameboy'
             await gb.setEntries({ strategy: 'Tetris', rpg: 'Zelda: Link\'s Awakening', adventure: 'Wario Land II' })
@@ -114,15 +104,16 @@
 
             // Delete db
             const db64Obj = await db64.delete('Games')
-            console.log('db64Obj', db64Obj)
+
+            console.info('db64.delete returns db64:', shallowEqual(db64Obj, db64))
         } catch (e) {
-            console.log('TRY', e.name)
+            console.log('Error:', e)
             switch (e.name) {
                 // Manage missing store
                 case 'NotFoundError':
                 // The operation failed because the requested database object could not be found.
                 case 'Db64MissingStore':
-                    console.log('remake')
+                    console.info('NotFoundError/ Db64MissingStore')
                     // Delete the store's database
                     await db64.delete('Games')
                     // Re-create the databse with all it's stores 
