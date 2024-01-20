@@ -36,6 +36,7 @@ const openDatabase = (name = 'default', storeNames) => new Promise((resolve, rej
   }
 
   DBOpenRequest.onerror = ({ target }) => reject(target.result)
+  
 })
 
 
@@ -100,7 +101,6 @@ const getData = async (database, storeName, key, entries) => new Promise((resolv
 })
 
 
-
 /*
 Deletes an entry for a given store by key.
 - database            object          Database object
@@ -122,7 +122,6 @@ const deleteData = async (database, storeName, key) => new Promise((resolve, rej
       }
     }
     cursorRequest.onerror = e => reject(e)
-
     resolve(db64)
   } catch (e) {
     reject(e)
@@ -200,7 +199,7 @@ const db64 = {
       getEntries: async (keys) => openDatabase(name, storeName)
         .then(database => getData(database, storeName, keys, 'entries')),
       delete: async (keys) => openDatabase(name, storeName)
-        .then(database => deleteData(database, storeName, keys))
+        .then(database => deleteData(database, storeName, keys)),
     }
   },
   clear: async (name, storeName) => openDatabase(name, storeName)
