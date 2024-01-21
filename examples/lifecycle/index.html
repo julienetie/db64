@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>db64 - Lifecycle Example</title>
+    <style>
+        .submit {
+            background: crimson;
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+
+            &:hover {
+                background: rgb(144, 51, 15);
+            }
+
+            &:active {
+                background: black;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+    <form>
+        <input type="text" placeholder="Name">
+        <input type="text" placeholder="Age">
+        <input type="text" placeholder="Gender">
+        <input type="text" placeholder="Country">
+        <input type="text" placeholder="Eye color">
+        <input class="submit" id="submit" type="submit" value="Submit">
+    </form>
+
+    <script type="module">
+        import db64 from '../../src/db64.js'
+
+        const form = document.querySelector('form')
+
+        console.log(db64)
+
+        document.addEventListener('click', e => {
+            const { target } = e
+            if (target.id === 'submit') {
+                e.preventDefault()
+            }
+        })
+
+        document.addEventListener('mousedown', e => {
+            const { target } = e
+            if (target.id === 'submit') {
+                console.log('yo')
+                form
+            }
+        })
+
+    </script>
+</body>
+
+</html>

@@ -10,7 +10,7 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/http-server -a 127.0.0.1 -p 2222 -o",
-    "lint": "./node_modules/.bin/eslint --fix ./src ./create-distribution.js",
+    "lint": "./node_modules/.bin/eslint --fix ./src ./create-distribution.js ./examples",
     "prepublishOnly": "node create-distribution.js"
   },
   "repository": {

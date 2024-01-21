@@ -36,7 +36,6 @@ const openDatabase = (name = 'default', storeNames) => new Promise((resolve, rej
   }
 
   DBOpenRequest.onerror = ({ target }) => reject(target.result)
-  
 })
 
 
@@ -199,7 +198,7 @@ const db64 = {
       getEntries: async (keys) => openDatabase(name, storeName)
         .then(database => getData(database, storeName, keys, 'entries')),
       delete: async (keys) => openDatabase(name, storeName)
-        .then(database => deleteData(database, storeName, keys)),
+        .then(database => deleteData(database, storeName, keys))
     }
   },
   clear: async (name, storeName) => openDatabase(name, storeName)
