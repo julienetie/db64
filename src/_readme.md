@@ -2,6 +2,7 @@
 <img src="https://github.com/julienetie/db64/assets/7676299/29665616-14d5-4e14-a3ff-191cc6aae7fa" width="200">
 
 ## A Practical IndexedDB API
+### [Example](https://julienetie.github.io/db64/examples/input-data/)
 
 A more practical alternative to [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage). db64 supports [all major browsers](https://caniuse.com/indexeddb).  
 
