@@ -34,6 +34,7 @@ try {
   await db64.delete('Games')
 ...
 ```
+_Launch an example using `npm run d` then navigate to `./exmaples`_
 
 ### Why IndexedDB, why not localStorage?
 - Better performance
