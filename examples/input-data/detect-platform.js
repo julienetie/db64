@@ -25,7 +25,7 @@ const desktops = {
 
 
 const detectPlatform = () => {
-  if (userAgent === false) {
+  if (userAgent) {
     const ua = userAgent.toLowerCase().replace(removeExcessMozillaAndVersion, empty)
 
     // Determine the operating system.
