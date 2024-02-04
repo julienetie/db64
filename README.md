@@ -34,6 +34,7 @@ try {
   await db64.delete('Games')
 ...
 ```
+_Launch an example using `npm run d` then navigate to `./exmaples`_
 
 ### Why IndexedDB, why not localStorage?
 - Better performance
@@ -49,7 +50,7 @@ try {
 - Removing databases and stores is not straight forward nor necessary, and usually requires versioning
 
 > **_Just give me the builds_**
-> - `git@github.com:julienetie/db64.git`
+> - `git clone git@github.com:julienetie/db64.git`
 > - `cd db64 && npm i`
 > - `npm run prepublishOnly`
 

@@ -100,7 +100,6 @@ const getData = async (database, storeName, key, entries) => new Promise((resolv
 })
 
 
-
 /*
 Deletes an entry for a given store by key.
 - database            object          Database object
@@ -122,7 +121,6 @@ const deleteData = async (database, storeName, key) => new Promise((resolve, rej
       }
     }
     cursorRequest.onerror = e => reject(e)
-
     resolve(db64)
   } catch (e) {
     reject(e)

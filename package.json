@@ -1,6 +1,6 @@
 {
   "name": "db64",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "A Practical IndexedDB API",
   "main": "db64.js",
   "type": "module",
@@ -10,7 +10,8 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/http-server -a 127.0.0.1 -p 2222 -o",
-    "lint": "./node_modules/.bin/eslint --fix ./src ./create-distribution.js",
+    "lint": "./node_modules/.bin/eslint --fix ./src ./create-distribution.js ./examples",
+    "d": "./node_modules/.bin/http-server -o",
     "prepublishOnly": "node create-distribution.js"
   },
   "repository": {
@@ -38,5 +39,8 @@
     "http-server": "^14.1.1",
     "terser": "^5.26.0",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "d": "^1.0.1"
   }
 }

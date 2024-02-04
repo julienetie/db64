@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>db64 Example App</title>
+        <link rel="stylesheet" href="./style.css">
+    </head>
+    <body>
+        <form id="form">
+            <h1>db64 Example</h1>
+            <fieldset id="personal">
+                <legend>Personal</legend>
+                <input type="text" id="name" placeholder="Name?">
+                <input type="text" id="country" placeholder="Country?">
+            </fieldset>
+            <fieldset id="favourites">
+                <legend>Favourites</legend>
+                <input type="text" id="color" placeholder="Favourite color?">
+                <input type="text" id="food" placeholder="Favourite food">
+                <input type="text" id="drink" placeholder="Favourite drink">
+                <input type="text" id="music" placeholder="Favourite music">
+            </fieldset>
+            <fieldset id="random">
+                <legend>Random</legend>
+                <input type="text" id="year" placeholder="What year is it?">
+                <input type="text" id="leader" placeholder="Who is the President or Prime Minister?">
+                <input type="text" id="sky" placeholder="What color is the sky">
+                <input type="text" id="population" placeholder="What is the approximate population of Earth?">
+            </fieldset>
+            <fieldset disabled id="platform" class="platform">
+                <legend>Platform Data</legend>
+                <span>
+                    Browser:
+                    <input id="browser" type="text" placeholder="">
+                </span>
+                <span>
+                    Language:
+                    <input id="language" type="text" placeholder="">
+                </span>
+                <span>
+                    Operating System:
+                    <input id="os" type="text" placeholder="">
+                </span>
+                <span>
+                    Current Time:
+                    <input id="time" type="text" placeholder="">
+                </span>
+            </fieldset>
+            <fieldset disabled id="last-platform" class="last-platform">
+                <legend>Last Platform Data</legend>
+                <span>
+                    Language:
+                    <input id="last-language" type="text" placeholder="">
+                </span>
+                <span>
+                    Current Time:
+                    <input id="last-time" type="text" placeholder="">
+                </span>
+            </fieldset>
+            <button id="refresh">Refresh</button>
+            <button id="clear">Clear</button>
+            <button id="populate">Populate</button>
+        </form>
+        <div class="graphics">
+            <span class="quad one"></span>
+            <span class="quad two"></span>
+            <span class="quad three"></span>
+        </div>
+        <script type="module" src="script.js"></script>
+    </body>
+</html>

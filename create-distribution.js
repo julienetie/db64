@@ -4,6 +4,8 @@ import { minify } from 'terser'
 import { execSync } from 'child_process'
 import brotliSize from 'brotli-size'
 
+const name = 'db64'
+
 const currentFilePath = (new URL(import.meta.url)).pathname
 const __dirname = dirname(currentFilePath)
 
@@ -11,16 +13,16 @@ const paths = {
   packageJSON: path.join(__dirname, './package.json'),
   readmeSrc: path.join(__dirname, './src/_readme.md'),
   readmeRoot: path.join(__dirname, './README.md'),
-  source: path.join(__dirname, './src/db64.js'),
-  sourceTSdef: path.join(__dirname, './src/db64.d.ts'),
-  tsDefDist: path.join(__dirname, './dist/db64.d.ts'),
-  tsDefMapDist: path.join(__dirname, './dist/db64.d.ts.map'),
-  cjsDist: path.join(__dirname, './dist/db64.cjs'),
-  esDist: path.join(__dirname, './dist/db64.js'),
-  esMinDist: path.join(__dirname, './dist/db64.min.js'),
-  esMinMapDist: path.join(__dirname, './dist/db64.min.map'),
-  cjsMinDist: path.join(__dirname, './dist/db64-cjs.min.js'),
-  cjsMinMapDist: path.join(__dirname, './dist/db64-cjs.min.map')
+  source: path.join(__dirname, `./src/${name}.js`),
+  sourceTSdef: path.join(__dirname, `./src/${name}.d.ts`),
+  tsDefDist: path.join(__dirname, `./dist/${name}.d.ts`),
+  tsDefMapDist: path.join(__dirname, `./dist/${name}.d.ts.map`),
+  cjsDist: path.join(__dirname, `./dist/${name}.cjs`),
+  esDist: path.join(__dirname, `./dist/${name}.js`),
+  esMinDist: path.join(__dirname, `./dist/${name}.min.js`),
+  esMinMapDist: path.join(__dirname, `./dist/${name}.min.map`),
+  cjsMinDist: path.join(__dirname, `./dist/${name}-cjs.min.js`),
+  cjsMinMapDist: path.join(__dirname, `./dist/${name}-cjs.min.map`)
 }
 
 
@@ -30,7 +32,7 @@ const createCJS = async () => {
     const tsDefData = await fs.readFile(paths.sourceTSdef, 'utf8')
     const readmeSrc = await fs.readFile(paths.readmeSrc, 'utf8')
 
-    const insertCJSImport = data.replace(/export default db64/g, 'module.exports = db64')
+    const insertCJSImport = data.replace(new RegExp(`export default ${name}`, 'g'), `module.exports = ${name}`)
 
     const minifiedESData = await minify(data, {
       sourceMap: {

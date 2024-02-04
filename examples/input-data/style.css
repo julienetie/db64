@@ -1,0 +1,119 @@
+body {
+  display: grid;
+  place-items: center;
+  background: #222;
+  height: 100dvh;
+  overflow-y: hidden;
+  font-family: sans-serif;
+}
+
+input{
+    box-sizing: border-box;
+    border: 0.05rem solid #444;
+    margin-bottom: 0.2rem;
+}
+
+form {
+  display: grid;
+  min-width: 24rem;
+  background: rgba(255, 255, 255, 0.767);
+  padding: 1rem;
+
+  > h1 {
+    justify-self: center;
+    margin: 0;
+    padding-bottom: 0.4rem;
+  }
+
+  > fieldset {
+    padding: 1rem;
+    background: white;
+    display: grid;
+    margin-top: 0.5rem;
+    border: none;
+    transition: all 400ms ease;
+
+    &:is(.platform, .last-platform) {
+        >span:last-child {
+            > input {
+              text-overflow: ellipsis;
+              cursor: pointer;
+              transition: all 400ms ease;
+              width: 12rem;
+              &:hover {
+                width: 25rem;
+              }  
+            }
+        }
+       
+    }
+
+    > legend {
+        background: white;
+        padding: 0.2rem 0.7rem;
+    }
+
+    > span {
+      display: grid;
+      grid-template-columns: 10rem 1fr;
+    }
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: rotate3d(1, 1, 0, 0deg);
+  }
+
+  from {
+    transform: rotate3d(1, 0, 1, 360deg);
+  }
+}
+
+@keyframes shrink {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+.graphics {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  animation: shrink 7000ms linear;
+  animation-fill-mode: forwards;
+
+  > .quad {
+    top: 0;
+    left: 0;
+    opacity: 0.3;
+    position: absolute;
+    top: 3%;
+    left: 10%;
+    background: lime;
+    width: 800px;
+    height: 700px;
+    will-change: transform;
+    animation: drift 6000ms linear;
+    animation-iteration-count: 2;
+
+    &.three {
+      animation: drift 4000ms linear;
+      animation-iteration-count: 3;
+      background: #e3294e;
+      will-change: transform;
+    }
+
+    &.two {
+      animation: drift 2000ms linear;
+      animation-iteration-count: 6;
+      background: #2f7aeb;
+      will-change: transform;
+    }
+  }
+}
