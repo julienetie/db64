@@ -1,6 +1,20 @@
 const { isArray } = Array
 const connections = []
+const isString = value => typeof value === 'string'
 
+
+const has = async (name, storeName) => {
+  if (!isString(name)) console.error(`${name} should be a string`)
+  const isStringOrArray = isString(storeName) || isArray(storeName)
+  if (!isStringOrArray) console.error(`${storeName} should be a string or an array`)
+
+  const db = await openDatabase(name, isArray(storeName) ? storeName : [storeName])
+  if (isArray(storeName)) return storeName.every(store => db.objectStoreNames.contains(store))
+
+  return db.objectStoreNames.contains(storeName)
+}
+
+const deleteDatabase = async name => deleteDB(name)
 
 /*
 Creates a new database with given stores if the database and stores don't exist.
@@ -74,6 +88,10 @@ Gets an entry by a given key/value pair or a dataset of entries.
 - Return        object              A promise fulfilled with the queried data
 */
 const getData = async (database, storeName, key, entries) => new Promise((resolve, reject) => {
+  if (!database.objectStoreNames.contains(storeName)) {
+    console.error(`Store ${storeName} was not found in database ${database}`)
+  }
+
   const objectStore = (database.transaction([storeName])).objectStore(storeName)
 
   if (entries) {
@@ -178,15 +196,22 @@ const deleteDB = name => {
 /*
 The db64 object */
 const db64 = {
-  create: async (name, storeNames) => {
-    if (typeof name !== 'string') console.error(`${name} should be a string`)
+  create: async (name, storeNames, storeDelete = 'enable-delete') => {
+    if (!isString(name)) console.error(`${name} should be a string`)
     if (!isArray(storeNames)) return console.error(`${storeNames} should be an array`)
 
+    const shouldDisableDelete = storeDelete === 'disable-delete'
+    
+    if (!shouldDisableDelete && !await has(name, storeNames)) {
+      console.log('delete')
+      await deleteDB(name)
+    }
     return openDatabase(name, storeNames)
   },
+  has,
   use: (name, storeName) => {
-    if (typeof name !== 'string') console.error(`${name} should be a string`)
-    if (typeof name !== 'string') console.error(`${storeName} should be a string`)
+    if (!isString(name)) console.error(`${name} should be a string`)
+    if (!isString(storeName)) console.error(`${storeName} should be a string`)
 
     return {
       set: async (key, value) => openDatabase(name, [storeName])
@@ -203,7 +228,7 @@ const db64 = {
   },
   clear: async (name, storeName) => openDatabase(name, storeName)
     .then(database => clearStore(database, storeName)),
-  delete: async name => deleteDB(name)
+  delete: deleteDatabase,
 }
 
 export default db64
