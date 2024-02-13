@@ -1,19 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DB64</title>
-</head>
-
-<body>
-    <h1>DB64</h1>
-
-    <button>Set data</button>
-    <button>get data</button>
-
-    <script type="module">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>DB64</title>
+    </head>
+    <body>
+        <h1>DB64</h1>
+        <button>Set data</button>
+        <button>get data</button>
+        <script type="module">
         import db64 from '../src/db64.js'
 
         // To makesure we're getting back db64 for function chaining.
@@ -34,6 +30,31 @@
 
 
 
+            // Check for missing stores 
+            if(await db64.has('Games', ['Super Nintendo', 'Gameboy']) === true) console.info('Has stores "Super Nintendo" and "Gameboy"')
+
+
+
+            // Recreate with different stores 
+            await db64.create('Games', ['Nintendo Switch', 'Nintendo DS'])
+            
+
+
+            // Check it has the created stores
+            if(await db64.has('Games', ['Nintendo Switch', 'Nintendo DS']) === true) console.info('Has stores "Nintendo Switch" and  "Nintendo DS"')
+
+
+
+            // Rectify creation of original stores
+            await db64.create('Games', ['Super Nintendo', 'Gameboy'])
+
+
+
+            // Check it has the created stores
+            if(await db64.has('Games', ['Super Nintendo', 'Gameboy']) === true) console.info('Has stores "Super Nintendo" and "Gameboy"')
+
+
+            
             // Assign a variable with the selected database and store to modify 
             const snes = db64.use('Games', 'Super Nintendo')
 
@@ -151,8 +172,6 @@
                     break
             }
         }
-
-    </script>
-</body>
-
+        </script>
+    </body>
 </html>
