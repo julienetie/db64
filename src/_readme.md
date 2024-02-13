@@ -3,7 +3,7 @@
 
 ## A Practical IndexedDB API
 
-> ## $${\color{darkred}[[Disclaimer]]}$$
+> ### Disclaimer
 > Starting from version 0.8.5, before creating a new databse, the function `db64.create(<database>,[<store>,<store>,...])` will now automatically delete the existing specified database if it does not contain the exact specified stores.
 > If you do not want this behavior, set the third argument to `disable-delete` e.g. `db64.create('db', ['x', 'y'], 'disable-delete')`
 
