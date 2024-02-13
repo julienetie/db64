@@ -2,6 +2,11 @@
 <img src="https://github.com/julienetie/db64/assets/7676299/29665616-14d5-4e14-a3ff-191cc6aae7fa" width="200">
 
 ## A Practical IndexedDB API
+
+> ## $${\color{darkred}[[Disclaimer]]}$$
+> Starting from version 0.8.5, before creating a new databse, the function `db64.create(<database>,[<store>,<store>,...])` will now automatically delete the existing specified database if it does not contain the exact specified stores.
+> If you do not want this behavior, set the third argument to `disable-delete` e.g. `db64.create('db', ['x', 'y'], 'disable-delete')`
+
 ### [Example](https://julienetie.github.io/db64/examples/input-data/)
 
 A more practical alternative to [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage). db64 supports [all major browsers](https://caniuse.com/indexeddb).  
@@ -68,9 +73,20 @@ import db64 from 'db64'       // ES
 const db64 = require('db64')  // CommonJS
 ```
 
-**Create a database with stores**  _(string, array)_
+**Create a database with stores**  _(string, array, string)_
 ```javascript 
 await db64.create('game-consoles', ['n64', 'ps5', 'dreamcast', 'xbox-360'])
+// or
+await db64.create(..., ..., 'disable-delete')
+```
+By default, if the database to create exists but dosn't have the expected stores, it will be deleted before being re-created.
+This can be disabled by using the `'disable-delete'` string.
+
+**Check if a database has a store**  _(string, string | array)_
+```javascript 
+const hasN64 = async db64.has('game-consoles', 'n64')
+// or
+const hasStores = async db64.has('game-consoles', ['n64', 'dreamcast', 'ps5'])
 ```
 
 **Use a store**  _(string, string)_
