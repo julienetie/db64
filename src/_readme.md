@@ -84,9 +84,9 @@ This can be disabled by using the `'disable-delete'` string.
 
 **Check if a database has a store**  _(string, string | array)_
 ```javascript 
-const hasN64 = async db64.has('game-consoles', 'n64')
+const hasN64 = await db64.has('game-consoles', 'n64')
 // or
-const hasStores = async db64.has('game-consoles', ['n64', 'dreamcast', 'ps5'])
+const hasStores = await db64.has('game-consoles', ['n64', 'dreamcast', 'ps5'])
 ```
 
 **Use a store**  _(string, string)_
