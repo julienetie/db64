@@ -4,7 +4,7 @@
 ## A Practical IndexedDB API
 
 > ### Disclaimer
-> Starting from version 0.8.5, before creating a new databse, the function `db64.create(<database>,[<store>,<store>,...])` will now automatically delete the existing specified database if it does not contain the exact specified stores.
+> Starting from version 0.8.5, before creating a new database, the function `db64.create(<database>,[<store>,<store>,...])` will now automatically delete the existing specified database if it does not contain the exact specified stores.
 > If you do not want this behavior, set the third argument to `disable-delete` e.g. `db64.create('db', ['x', 'y'], 'disable-delete')`
 
 ### [Example](https://julienetie.github.io/db64/examples/input-data/)
@@ -27,7 +27,7 @@ try {
   // First create a database with stores
   await db64.create('Games', ['Super Nintendo', 'Gameboy'])
 
-  // Assing a variable for modifying a store
+  // Assign a variable for modifying a store
   const snes = db64.use('Games', 'Super Nintendo')
 
   // Set multiple entries into Super Nintendo
@@ -40,7 +40,7 @@ try {
   await db64.delete('Games')
 ...
 ```
-_Launch an example using `npm run d` then navigate to `./exmaples`_
+_Launch an example using `npm run d`, then navigate to `./examples`_
 
 ### Why IndexedDB, why not localStorage?
 - Better performance
@@ -52,8 +52,8 @@ _Launch an example using `npm run d` then navigate to `./exmaples`_
 ### Practical challenges when using IndexedDB
 - It's event driven, without promises
 - It was designed to encourage versioning, which is not necessary for the majority of projects
-- The API is considered as (low level) and can be challenging as a replacement for localStorage
-- Removing databases and stores is not straight forward nor necessary, and usually requires versioning
+- The API is considered _low level_ and can be challenging as a replacement for localStorage
+- Removing databases and stores is not straightforward nor necessary, and usually requires versioning
 
 > **_Just give me the builds_**
 > - `git clone git@github.com:julienetie/db64.git`
@@ -64,6 +64,7 @@ _Launch an example using `npm run d` then navigate to `./exmaples`_
 ```
 npm i db64
 ```
+
 **Import**
 ```javascript
 import db64 from 'db64.js'    // ES (native)
@@ -139,16 +140,16 @@ We are avoiding versioning to keep your life simple. Deleting an existing object
 Here's the db64 workflow:
 
 1. Initialise by creating a DB with stores or multiple DBs with stores.
-    - _(You won't be able to add stores to an existing DB later, unless you delete the DB in question. This is by design)_
+    - _By design, you won't be able to add stores to an existing DB later, unless you delete the DB in question_
 
 2. Use a DB.
-    - _(You can make multiple transactions concurrently for multiple DBs, or stores)_
+    - _You can make multiple transactions concurrently for multiple DBs, or stores_
 
 3. Set, get and clear data.
 
 4. **Manage the lifecycle of DB deletion and re-creation**:
     - _When data cannot be retrieved from the user's IndexedDB_
-    - _When there's an error_
+    - _When there's an error, e.g.:_
       - _Data corruption_
       - _Quota exceeded_
       - _General errors_
@@ -159,27 +160,29 @@ It's important to consider step 4, if not you may leave users stuck because ever
 Step 4 isn't specific to IndexedDB, it mostly applies to _localStorage_. It's the same for all persistent storage on all platforms. Your application is at risk of breaking if you decide to change the persistent data structure or add to the structure in the future without preemptively managing common user cases.
 
 ```javascript
-// An exaustive list for handeling errors for db64:
+// An exhaustive list for handling errors in db64:
 switch (e.name) {
     case 'NotFoundError':
     // The operation failed because the requested database object could not be found.
     case 'Db64MissingStore':
-    /*
-    An anticipated NotFoundError. Manage both cases togeather.
-    You will likely need to re-create your dateabase here with necessary stores 
-    and re-populate with existing data if necessary. */ 
+    /**
+      * An anticipated NotFoundError. Manage both cases together.
+      *
+      * You will likely need to re-create your database here with necessary stores 
+      * and re-populate with existing data if necessary. 
+      */ 
         break
     case 'AbortError':
         // A request was aborted.
         break
     case 'SecurityError':
-        // Handel security error 
+        // Handle security error 
         break
     case 'DataError':
         // Data provided to an operation does not meet requirements.
         break
     case 'TransactionInactiveError':
-        // A request was placed against a transaction which is currently not active, or which is finished.
+        // A request was placed against a transaction which is currently not active or has been finished.
         break
     case 'InvalidStateError':
         // The object is in an invalid state.
@@ -191,7 +194,7 @@ switch (e.name) {
         // The keyPath argument contains an invalid key path.
         break
     case 'QuotaExceededError':
-        // The operation failed because there was not enough remaining storage space, or the storage quota was reached and the user declined to give more space to the database.
+        // The operation failed because there was not enough remaining storage space, or the storage quota was reached and the user declined to provide more space to the database.
         break
     case 'ReadOnlyError':
         // The mutating operation was attempted in a read-only transaction.
@@ -211,4 +214,4 @@ If you want to edit `./README.md` edit `./src/_readme.md` which will update `./R
 This is to keep the minified size accurate.
 
 ---
-MIT © Julien Etienne 2023
+MIT © Julien Etienne 2024
