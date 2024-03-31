@@ -9,8 +9,9 @@
     "require": "./dist/db64.cjs"
   },
   "scripts": {
-    "test": "./node_modules/.bin/http-server -a 127.0.0.1 -p 2222 -o",
-    "lint": "./node_modules/.bin/eslint --fix ./src ./create-distribution.js ./examples",
+    "test": "./node_modules/.bin/http-server -p=3333 --s | ./node_modules/.bin/mocha-chrome http://127.0.0.1:3333/test/db64.test.html --ignore-exceptions",
+    "tester": "./node_modules/.bin/http-server -a 127.0.0.1 -p 2222 -o",
+    "lint": "./node_modules/.bin/eslint --fix ./src ./create-distribution.js ./examples ./test",
     "d": "./node_modules/.bin/http-server -o",
     "prepublishOnly": "node create-distribution.js"
   },
@@ -31,12 +32,15 @@
   "homepage": "https://github.com/julienetie/db64#readme",
   "devDependencies": {
     "brotli-size": "^4.0.0",
+    "chai": "^5.1.0",
     "eslint": "^8.56.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-n": "^16.5.0",
     "eslint-plugin-promise": "^6.1.1",
     "http-server": "^14.1.1",
+    "mocha": "^10.4.0",
+    "mocha-chrome": "^2.2.0",
     "terser": "^5.26.0",
     "typescript": "^5.3.3"
   },

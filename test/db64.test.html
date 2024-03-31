@@ -1,0 +1,23 @@
+<!doctype>
+<html>
+
+<head>
+    <title>DB64 Test</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+    <script type="" src="../node_modules/mocha/mocha.js"></script>
+</head>
+
+<body>
+    <div id="mocha"></div>
+    <script>
+        mocha.setup({
+            ui: 'bdd',
+            // asyncOnly: true
+        })
+    </script>
+
+    <script type="module" src="../test/db64.test.js" defer></script>
+
+    <script type="module"> mocha.run() </script>
+</body>

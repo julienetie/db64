@@ -201,7 +201,7 @@ const db64 = {
     if (!isArray(storeNames)) return console.error(`${storeNames} should be an array`)
 
     const shouldDisableDelete = storeDelete === 'disable-delete'
-    
+
     if (!shouldDisableDelete && !await has(name, storeNames)) {
       console.log('delete')
       await deleteDB(name)
@@ -228,7 +228,7 @@ const db64 = {
   },
   clear: async (name, storeName) => openDatabase(name, storeName)
     .then(database => clearStore(database, storeName)),
-  delete: deleteDatabase,
+  delete: deleteDatabase
 }
 
 export default db64
