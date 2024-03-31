@@ -1,5 +1,7 @@
-# db64
-<img src="https://github.com/julienetie/db64/assets/7676299/29665616-14d5-4e14-a3ff-191cc6aae7fa" width="200">
+
+<img src="https://github.com/julienetie/db64/assets/7676299/ba8b9109-0c3d-4495-a67e-048b166ea4a1" width="150">
+
+# DB64
 
 ## A Practical IndexedDB API
 
