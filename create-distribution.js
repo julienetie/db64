@@ -3,10 +3,13 @@ import path, { dirname } from 'path'
 import { minify } from 'terser'
 import { execSync } from 'child_process'
 import brotliSize from 'brotli-size'
+import { fileURLToPath } from 'url'
 
 const name = 'db64'
 
-const currentFilePath = (new URL(import.meta.url)).pathname
+// path.dirname returns a path which starts with 'file:///', which can cause issues with API path methods
+// fileURLToPath converts the path to a format that can be used with path methods
+const currentFilePath = fileURLToPath(new URL(import.meta.url))
 const __dirname = dirname(currentFilePath)
 
 const paths = {
@@ -45,7 +48,8 @@ const createCJS = async () => {
       }
     })
 
-
+    // Create dist directory if it doesn't exist, to avoid ENOENT error
+    await fs.mkdir(path.dirname(paths.esDist), { recursive: true })
     /*
     ES */
     await fs.writeFile(paths.esDist, data, 'utf8')
@@ -66,7 +70,9 @@ const createCJS = async () => {
     console.info(`Created ${paths.tsDefDist}`)
 
     // TS Definitions Map
-    const tsc = './node_modules/.bin/tsc'
+    // same problem as for package.json scripts, doesn't work on windows because files can't be called up with './' prefix
+    // Prefer to use npx, which is directly integrated to npm
+    const tsc = 'npx tsc'
     execSync(`${tsc} --project tsconfig.json`, { stdio: 'inherit' })
     console.info(`Created ${paths.tsDefMapDist}`)
 
