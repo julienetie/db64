@@ -9,10 +9,10 @@
     "require": "./dist/db64.cjs"
   },
   "scripts": {
-    "test": "./node_modules/.bin/http-server -p=3333 --s | ./node_modules/.bin/mocha-chrome http://127.0.0.1:3333/test/db64.test.html --ignore-exceptions",
-    "tester": "./node_modules/.bin/http-server -a 127.0.0.1 -p 2222 -o",
-    "lint": "./node_modules/.bin/eslint --fix ./src ./create-distribution.js ./examples ./test",
-    "d": "./node_modules/.bin/http-server -o",
+    "test": "npx http-server -p=3333 --s | npx mocha-chrome http://127.0.0.1:3333/test/db64.test.html --ignore-exceptions",
+    "tester": "npx http-server -a 127.0.0.1 -p 2222 -o",
+    "lint": "npx eslint --fix ./src ./create-distribution.js ./examples ./test",
+    "d": "npx http-server -o",
     "prepublishOnly": "node create-distribution.js"
   },
   "repository": {
