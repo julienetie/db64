@@ -5,10 +5,6 @@
 
 ## A Practical IndexedDB API
 
-> ### Disclaimer
-> Starting from version 0.8.5, before creating a new database, the function `db64.create(<database>,[<store>,<store>,...])` will now automatically delete the existing specified database if it does not contain the exact specified stores.
-> If you do not want this behavior, set the third argument to `disable-delete` e.g. `db64.create('db', ['x', 'y'], 'disable-delete')`
-
 ### [Example](https://julienetie.github.io/db64/examples/input-data/)
 
 A more practical alternative to [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage). db64 supports [all major browsers](https://caniuse.com/indexeddb).  
