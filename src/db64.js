@@ -34,7 +34,14 @@ const openDatabase = (name = 'default', storeNames) => new Promise((resolve, rej
     const { result } = target
     storeNames.forEach(storeName => {
       if (!result.objectStoreNames.contains(storeName)) {
-        const storeCreation = result.createObjectStore(storeName)
+        let storeCreation
+
+        try {
+          storeCreation = result.createObjectStore(storeName)
+        } catch (err) {
+          reject(err)
+        }
+
         storeCreation.onerror = err => reject(err.target.error)
       }
     })
